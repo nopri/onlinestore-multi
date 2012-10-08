@@ -1,0 +1,64 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+        $$(document).ready(function(){
+            $$.ajaxSetup({
+                cache: false
+            });
+                    
+            function msgok(c, m)
+            {
+                c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+            }
+
+            
+            $if not data['faq']:
+                var dmsg = $$('#msg');
+                msgok(dmsg, "$msg['msg_faq_empty'].capitalize().");
+            
+            $if data['faq']:
+                $ keys = data['faq'].keys()
+                $keys.sort()
+                $for i in keys:
+                    $for j in data['faq'][i]:
+                        $$('#q-$j.id').click(function(){
+                            $$('#a-$j.id').toggle();
+                        });
+
+            
+            
+        });
+    </script>
+
+
+    <div class='content'>
+    <h3>$msg['title_faq'].capitalize()</h3>
+    <div id='msg'></div><br>
+
+    $if data['faq']:
+        $ keys = data['faq'].keys()
+        $keys.sort()
+        <dl>
+        $for i in keys:
+            <dt><b>$i.capitalize()</b></dt>
+            $for j in data['faq'][i]:
+                <dd><a href='#' id='q-$j.id'>$j.question[1]</a></dd>
+                <div id='a-$j.id' style='display: none'>
+                    $j.answer[1]
+                    $if j.file_id:
+                        <br>&rarr;&nbsp;<a href="$ub('/fs/')$j.file_id?download=1">$msg['cmd_faq_file']</a>
+                    <br><br>
+                </div>
+            <br>
+        </dl>
+        <br>
+        <br>
+
+    </div>

@@ -1,0 +1,57 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <div class='content'>
+    <h3>$msg['title_admin'].capitalize()</h3>
+    <br>
+
+    $if data['level']:
+        $ found = 0
+        $ lvl = []
+        $for i in data['levels']:
+            $if i.lower() == data['level'].lower():
+                $ x = '<b>' + i.capitalize() + '</b>'
+                $ found = 1
+            $else:
+                $ x = i.capitalize()
+            $ lvl.append(x)
+        $if found == 0:
+            $ lvl[0] = '<b>' + lvl[0] + '</b>'
+        $ lvl2 = '&nbsp;&rarr;&nbsp;'.join(lvl)
+        <table class='admin'>
+        <tr>
+        <!--<td width='15%'><b>$msg['header_member_level'].capitalize()</b></td><td>$data['level'].capitalize()</td>-->
+        <td width='15%'><b>$msg['header_member_level'].capitalize()</b></td><td>$:lvl2</td>
+        </tr>
+        <tr>
+        <td width='15%'><b>$msg['header_app_version'].capitalize()</b></td><td>$data['version']</td>
+        </tr>
+        </table>
+        <br>
+
+    <table class='admin'>
+    $ datam = data['menu']
+    $ maxcol = 3 #maximum columns
+    $ row = 0
+    $ x = 0
+    $ pwidth = int(float(100)/maxcol)
+    $for i in datam:
+        $if len(datam)> 1 and x >= len(datam)-1:
+            $ break 
+        <tr>
+        $for j in range(0, maxcol):
+            $ x = (row*maxcol) + j
+            $if x < len(datam):
+                <td width='$pwidth%'><a href='$datam[x][1]'>$datam[x][0]</a></td>
+            $else:
+                <td>&nbsp;</td>
+        $ row += 1
+        </tr>
+    </table>
+    </div>

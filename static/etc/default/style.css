@@ -1,0 +1,739 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family : verdana,helvetica,arial,sans-serif;
+    font-size   : 14px;
+    margin      : 0;
+    padding     : 0;
+    background  : #ffffff;
+    color       : #272727;
+}
+
+.header
+{
+    background-image    : url('header.gif');
+    background-repeat   : repeat-x;
+    height              : 100px;
+}
+
+.logo
+{
+    height              : 78px;
+    width               : 200px;
+    float               : left;
+    padding             : 4px;
+}
+
+.logo img
+{
+    border          : 0px;
+    padding         : 0px;
+}
+
+.menu
+{
+    text-align      : right;
+    font-size       : 12pt;
+    padding-top     : 55px;
+    color           : #ffffff;
+    float           : right;
+    width           : 700px;
+    font-weight     : normal;
+}
+
+.menu a
+{
+
+}
+
+.menuactive
+{
+    color           : #ffffff;
+    font-weight     : normal;
+    text-decoration : none;
+}
+
+.menuselected
+{
+    color           : #ffffff;
+    font-weight     : bold;
+    text-decoration : none;
+}
+
+.dot
+{
+    background-image    : url('dot.gif');
+    background-repeat   : no-repeat;
+    background-position : center center;
+}
+
+.lang
+{
+    text-align      : right;
+    padding-top     : 55px;
+    padding-right   : 10px;
+    float           : right;
+}
+
+.lang img
+{
+    border          : 0px;
+}
+
+.content
+{
+    text-align      : left;
+    margin          : 10px;
+    padding         : 10px;
+    padding-bottom  : 20px;
+    border-bottom   : 1px solid #dddddd;
+}
+
+.fullinfo
+{
+    text-align      : left;
+    margin-top      : 10px;
+}
+
+a
+{
+    color           : #272727;
+    text-decoration : underline;
+}
+
+
+.linkdetail
+{
+    text-decoration : underline;
+    font-size       : 12px;
+}
+
+.yahoo
+{
+    text-align      : right;
+    padding         : 2px;
+}
+
+.yahoo img
+{
+    border          : 0px;
+}
+
+.links
+{
+    text-align      : right;
+    padding         : 4px;
+}
+
+
+.title
+{
+    font-size       : 18px;
+    font-weight     : bold;
+    border-bottom   : 1px solid #eeeeee;
+}
+
+.product
+{
+    width           : 100%;
+}
+
+.product td
+{
+    padding-top     : 10px;
+    vertical-align  : top;
+    font-size       : 90%;
+}
+
+.variant
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.variant td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 4px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.cart
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.cart td, .cart th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.login
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.login td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.contact
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.contact td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.news
+{
+    background-color: #c8fb9f;
+    color           : #272727;
+    border          : 1px solid #54a145;
+    margin          : 6px;
+    margin-bottom   : 10px;
+    padding         : 10px;
+    padding-left    : 8px;
+}
+
+.news table
+{
+    font-size       : 95%;
+}
+
+.news td
+{
+    padding         : 2px;
+    padding-bottom  : 6px;
+}
+
+.news2
+{
+    font-size       : 95%;
+}
+
+.admin
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+    width           : 100%;
+    text-align      : center;
+}
+
+.admin td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 90%;
+    vertical-align  : middle;
+}
+
+.passwd
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.passwd td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.profile
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.profile td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+
+
+.file
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+    width           : 100%;
+}
+
+.file td, .file th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.system
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+    width           : 100%;
+    text-align      : left;
+}
+
+.system td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 90%;
+    vertical-align  : middle;
+}
+
+.system2
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+    width           : 100%;
+    text-align      : center;
+}
+
+.system2 td
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 90%;
+    vertical-align  : middle;
+    text-align      : left;
+}
+
+.admin_product
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_product td, .admin_product th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_bank
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_bank td, .admin_bank th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_paypal
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_paypal td, .admin_paypal th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_yahoo
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_yahoo td, .admin_yahoo th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_link
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_link td, .admin_link th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_promote
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_promote td, .admin_promote th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_news
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_news td, .admin_news th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_faq
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_faq td, .admin_faq th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+.admin_invoice
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_invoice td, .admin_invoice th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+
+.admin_stat
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_stat td, .admin_stat th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+
+.payment_confirm
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.payment_confirm td, .payment_confirm th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}
+
+
+
+.currency_symbol
+{
+    float           : left;
+    margin          : 0 6px 0 0;
+    color           : #aaaaaa;
+    vertical-align  : middle;
+}
+
+img
+{
+    padding         : 4px;
+    border          : 1px solid #aaaaaa;
+
+}
+
+.sticky
+{
+    margin          : 4px;
+    margin-bottom   : 6px;
+}
+
+
+.datetime
+{
+    color           : #54a145;
+}
+
+.copyright
+{
+    padding         : 4px;
+    color           : #aaaaaa;
+    text-align      : center;
+}
+
+.extrainfo
+{
+    padding         : 4px;
+    color           : #aaaaaa;
+    text-align      : center;
+}
+
+.invoiceinfo
+{
+    color           : #272727;
+    text-align      : left;
+    font-style      : italic;
+    font-size       : 75%;
+}
+
+.admininfo
+{
+    color           : #272727;
+    text-align      : left;
+    font-style      : italic;
+}
+
+.admininfo2
+{
+    color           : #aaaaaa;
+    text-align      : left;
+    font-style      : italic;
+    font-size       : 90%;
+}
+
+
+.profileinfo
+{
+    color           : #aaaaaa;
+    text-align      : left;
+    font-style      : italic;
+    font-size       : 90%;
+}
+
+.optional
+{
+    color           : #aaaaaa;
+    text-align      : left;
+    font-style      : italic;
+    font-size       : 90%;
+}
+
+.systeminfo
+{
+    color           : #aaaaaa;
+    text-align      : left;
+    font-style      : italic;
+    font-size       : 90%;
+}
+
+.payment_confirm_info
+{
+    color           : #aaaaaa;
+    text-align      : left;
+    font-style      : italic;
+    font-size       : 90%;
+}
+
+
+.rendertime
+{
+    padding         : 4px;
+    color           : #aaaaaa;
+    text-align      : center;
+}
+
+.match
+{
+    color           : green;
+    font-weight     : bold;
+    background-color: #c8fb9f;
+    padding         : 2px;
+}
+
+.mismatch
+{
+    color           : red;
+    font-weight     : bold;
+    background-color: #fbe1c3;
+    padding         : 2px;
+    
+}
+
+.invoice_closed
+{
+    color           : green;
+    font-weight     : bold;
+    background-color: #c8fb9f;
+    padding         : 2px;
+}
+
+.admin_general
+{
+    border-color    : #dddddd;
+    border-width    : 0 0 1px 1px;
+    border-style    : solid;
+    border-collapse : collapse;
+}
+
+.admin_general td, .admin_general th
+{
+    border-color    : #dddddd;
+    border-width    : 1px 1px 0 0;
+    border-style    : solid;
+    margin          : 0;
+    padding         : 10px;
+    font-size       : 75%;
+    vertical-align  : middle;
+}

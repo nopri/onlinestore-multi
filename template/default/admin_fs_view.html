@@ -1,0 +1,26 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    <a href="$ub('/admin/fs')">$msg['title_fs'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_fs_view'].capitalize(): $data['name']
+    </h3>
+    <br>
+    $if 'image' in data['type'].lower():
+        <img src="$ub('/fs/')$data['id']">
+    $elif 'shockwave-flash' in data['type'].lower():
+        $ f = '%s%s' %(ub('/fs/') , data['id'])
+        $:iflash(f, scale='default')
+    $else:
+        <a href="$ub('/fs/')$data['id']">$msg['cmd_download']</a>
+    </div>

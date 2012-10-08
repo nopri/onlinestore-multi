@@ -1,0 +1,231 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+        
+        $if not data['bank']:
+            var nodata = $$('#nodata');
+            msgok(nodata,'$msg['msg_bank_empty'].capitalize().');
+                    
+
+        $if data['message']:
+            $if not data['bank']:
+                var smmsg = $$('#nodata');
+            $else:
+                var smmsg = $$('#msg');
+            smmsg.show();
+            $if data['message'][0] == 'ok':
+                msgok(smmsg, "$data['message'][1].capitalize().");
+            $else:
+                msgerr(smmsg, "$data['message'][1].capitalize().");
+            
+
+        $$('#add').button({
+            icons: {primary: 'ui-icon-plus'},
+            text: true
+        });
+
+        $$('#edit').button({
+            icons: {primary: 'ui-icon-disk'},
+            text: true
+        });
+
+        
+        $for i in data['bank']:
+            $$('#link-del-$i.id').click(function(){
+                $$("#dialog-confirm-$i.id").dialog({
+                    resizable   : false,
+                    height      :240,
+                    modal       : true,
+                    draggable   : false,
+                    buttons: {
+                        "$msg['cmd_yes']": function() {
+                            $$(this).dialog('close');
+
+                            var dmsg = $$('#msg');
+                            dmsg.show();
+                            dmsg.html("<br><i>$msg['msg_wait']</i>");
+                            
+                            $$.post(
+                                "$ub('/admin/bank/del')",
+                                {id: $i.id, api:1},
+                                function (data)
+                                {
+                                    if (data == 'value')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error'].capitalize().");
+                                    }
+                                    else if (data == 'error')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                                    }
+                                    else if (data == 'ok')
+                                    {
+                                        window.location.href='$ub('/admin/bank')';
+                                    }
+                                }                       
+                            );     
+
+                        },
+                        "$msg['cmd_no']": function() {
+                            $$(this).dialog('close');
+                        }
+                    }
+                });
+
+            });
+
+            
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_admin_bank'].capitalize()
+    &nbsp;
+    [&nbsp;<a href='#new'>$msg['cmd_new']</a>&nbsp;]
+    </h3>
+    <br>
+    $if not data['bank']:
+        <div id='nodata'></div>
+    $else:
+        <div id='msg' style='display: none;'></div>
+        <br>
+        <form action="$ub('/admin/bank/save')" method='post'>
+        <input type='hidden' value='edit' name='type'>
+        <table class='admin_bank'>
+        <th>$msg['header_bank_name'].capitalize()</th>
+        <th>$msg['header_bank_account_name'].capitalize()</th>
+        <th>$msg['header_bank_account_number'].capitalize()</th>
+        <th>$msg['header_bank_currency'].capitalize()</th>
+        <th>$msg['header_bank_branch'].capitalize()</th>
+        <th>$msg['header_bank_address'].capitalize()</th>
+        <th>$msg['header_bank_country'].capitalize()</th>
+        <th>$msg['header_bank_swift'].capitalize()</th>
+        <th>$msg['header_bank_action'].capitalize()</th>
+        
+        $for b in data['bank']:
+            <tr>
+            <td><input type='text' size='10' name='name.$b.id' value="$b.name"></td>
+            <td><input type='text' size='10' name='holder.$b.id' value="$b.holder"></td>
+            <td><input type='text' size='10' name='account.$b.id' value="$b.account"></td>
+            <td>
+            <select name='currency_id.$b.id'>
+            $for i in data['all_currency']:
+                $if b.currency_id == i.id:
+                    <option value='$i.id' selected>$i.name - $i.csymbol</option>
+                $else:
+                    <option value='$i.id'>$i.name - $i.csymbol</option>    
+            </select>
+            </td>
+            <td><input type='text' size='10' name='branch.$b.id' value="$b.branch"></td>
+            <td><input type='text' size='10' name='address.$b.id' value="$b.address"></td>
+            <td><input type='text' size='10' name='country.$b.id' value="$b.country"></td>
+            <td><input type='text' size='5' name='swift.$b.id' value="$b.swift"></td>
+            <td><a href='#' id="link-del-$b.id">$msg['cmd_bank_del']</a></td>
+            </tr>
+        
+        <tr>
+        <td colspan='8'>
+        &nbsp;
+        </td>
+        <td><input type='submit' id='edit' value="$msg['cmd_bank_save']"></td>
+        </tr>
+        </table>
+        </form>
+
+        $for i in data['bank']:        
+            <div style='display: none;'>
+            <div id="dialog-confirm-$i.id" title="$msg['msg_confirm_title'].capitalize()">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin: 0 20px 20px 0;"></span>$msg['msg_bank_del_confirm'].capitalize(): <b>$i.name</b>?</p>
+            </div>
+            </div>
+
+    <br><br>
+    <a name='new'></a>
+    <form action="$ub('/admin/bank/save')" method='post'>
+    <input type='hidden' value='add' name='type'>
+    <h3>$msg['header_bank_new'].capitalize()</h3><br>
+    <table class='admin_bank'>
+
+    <tr>
+    <td><b>$msg['header_bank_name'].capitalize()</b></td>
+    <td><input type='text' name='name.new'></td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_bank_account_name'].capitalize()</b></td>
+    <td><input type='text' name='holder.new'></td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_bank_account_number'].capitalize()</b></td>
+    <td><input type='text' name='account.new'></td>
+    </tr>
+
+    <tr>
+    <td>$msg['header_bank_currency'].capitalize()</td>
+    <td>
+    <select name='currency_id.new'>
+    $for i in data['all_currency']:
+        <option value='$i.id'>$i.name - $i.csymbol</option>
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td>$msg['header_bank_branch'].capitalize()</td>
+    <td><input type='text' name='branch.new'></td>
+    </tr>
+
+    <tr>
+    <td>$msg['header_bank_address'].capitalize()</td>
+    <td><input type='text' name='address.new'></td>
+    </tr>
+
+    <tr>
+    <td>$msg['header_bank_country'].capitalize()</td>
+    <td><input type='text' name='country.new'></td>
+    </tr>
+
+    <tr>
+    <td>$msg['header_bank_swift'].capitalize()</td>
+    <td><input type='text' name='swift.new'></td>
+    </tr>
+
+    <tr>
+    <td>
+    &nbsp;
+    </td>
+    <td align='right'>
+    <input type='submit' id='add' value="$msg['cmd_bank_add']">
+    </td>
+    </tr>
+    </table>
+    </form>
+
+        
+    </div>

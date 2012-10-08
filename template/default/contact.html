@@ -1,0 +1,182 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+        
+        
+        $$('#btn-contact').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+        
+        $$('#reload').click(function(){
+            $$('#captchaimg').attr("src", "$ub('/captcha')?" + Date());
+        });
+
+
+        $$('#btn-contact').click(function(){
+            var name = $$('#name').val();
+            var email = $$('#email').val();
+            var msg = $$('#msg').val();
+            var captcha = $$('#captcha').val();
+            var dmsg = $$('#msg-contact');
+
+            $$('#btn-contact').button("option", "disabled", true);
+            
+            dmsg.show();                           
+            dmsg.html("<br><i>$msg['msg_wait']</i>");
+            
+            $$.post(
+                "$ub('/contact')",
+                {name: name, email: email, msg: msg, captcha: captcha, api:1},
+                function (data)
+                {
+                    $$('#btn-contact').button("option", "disabled", false);
+                    
+                    if (data == 'value')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error_required'].capitalize().");
+                    }
+                    else if (data == 'error')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                    }
+                    else if (data == 'captcha')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error_captcha'].capitalize().");
+                    }                
+                    else if (data == 'invalid_email')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_email_invalid'].capitalize().");
+                    }                
+                    else if (data == 'ok')
+                    {
+                        $$('#name').val('');
+                        $$('#email').val('');
+                        $$('#msg').val('');
+                        $$('#captcha').val('');
+                        msgok(dmsg, "$msg['msg_contact_message_sent'].capitalize().");
+                    }
+                }                       
+            );                    
+            
+            
+            
+        })
+
+        
+        
+    });
+    </script>
+
+    <div class='content'>
+    <h3>$msg['title_contact'].capitalize()</h3>
+    <div id='msg-contact' style='display: none;'></div>
+    <br>
+
+    <table>
+    <tr>
+    <td  style='vertical-align: top;'>
+
+    <table class='contact'>
+    <tr>
+    <td>
+    <b>$msg['field_name'].capitalize()</b>
+    </td>
+    <td>
+    <input type='text' id='name'>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <b>$msg['field_email'].capitalize()</b>
+    </td>
+    <td>
+    <input type='text' id='email'>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <b>$msg['field_message'].capitalize()</b>
+    </td>
+    <td>
+    <textarea id='msg' cols='40' rows='6'></textarea>
+    </td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_captcha'].capitalize()</b></td>
+    <td>
+    <a name='a-captcha'></a>
+    <img id='captchaimg' src="$ub('/captcha')?$now()">&nbsp;(<a href='#a-captcha' id='reload'>$msg['cmd_captcha_reload']</a>)<br>
+    <br><input type='text' id='captcha'></td>
+    </tr>   
+
+
+    <tr>
+    <td>
+    &nbsp;
+    </td>
+    <td align='right'>
+    <button id='btn-contact'>$msg['cmd_contact_us']</button>
+    </td>
+    </tr>
+    </table>
+
+    </td>
+    <td style='vertical-align: top;padding-left: 20px;'>
+
+
+    <table class='contact'>
+    $if data['phone'] or data['fax'] or data['address']:
+        <tr>
+        <td colspan='2'>
+        <b>$msg['header_contact_another'].capitalize()</b>
+        </td>
+        </tr>
+
+    $if data['phone']:
+        <tr>
+        <td>$msg['header_profile_phone'].capitalize()</td>
+        <td>$data['phone']</td>
+        </tr>
+    $if data['fax']:
+        <tr>
+        <td>$msg['header_profile_fax'].capitalize()</td>
+        <td>$data['fax']</td>
+        </tr>
+    $if data['address']:
+        <tr>
+        <td>$msg['header_profile_address'].capitalize()</td>
+        <td>$data['address']</td>
+        </tr>
+
+    </table>
+
+    </td>
+    </tr>
+    </table>
+
+
+
+    </div>

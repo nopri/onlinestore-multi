@@ -1,0 +1,303 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        $$('textarea').wysiwyg({
+            css : { fontFamily: 'Arial, Tahoma', fontSize : '12px'},
+            controls: {
+                bold : { visible : true },
+                strikeThrough : { visible : true },
+                underline     : { visible : true },
+                  
+                separator00 : { visible : false },
+                 
+                justifyLeft   : { visible : false },
+                justifyCenter : { visible : false },
+                justifyRight  : { visible : false },
+                justifyFull   : { visible : false },
+                  
+                separator01 : { visible : false },
+                  
+                indent  : { visible : false },
+                outdent : { visible : false },
+                  
+                separator02 : { visible : true },
+                  
+                subscript   : { visible : true },
+                superscript : { visible : true },
+                  
+                separator03 : { visible : true },
+                  
+                undo : { visible : false },
+                redo : { visible : false },
+                  
+                separator04 : { visible : false },
+                  
+                insertOrderedList    : { visible : true },
+                insertUnorderedList  : { visible : true },
+                insertHorizontalRule : { visible : false },
+
+                separator05 : { visible : false },
+                
+                createLink : { visible : false },
+                insertImage : { visible : false },
+
+                separator06 : { visible : false },
+                h1mozilla : { visible : false },
+                h2mozilla : { visible : false },
+                h3mozilla : { visible : false },
+                h1 : { visible : false },
+                h2 : { visible : false },
+                h3 : { visible : false },
+                h4 : { visible : false },
+                h5 : { visible : false },
+                h6 : { visible : false },
+
+                separator07 : { visible : true },
+                
+                increaseFontSize: { visible : true },
+                decreaseFontSize: { visible : true },
+                  
+                cut   : { visible : false },
+                copy  : { visible : false },
+                paste : { visible : false },
+                
+                separator08 : { visible : false },
+                
+                
+                
+                separator09 : { visible : false },
+                            
+                html : { visible : true },
+                
+                removeFormat : { visible : false }
+                
+                
+                     
+            }
+        });   
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+        
+        $if not data['faq']:
+            var nodata = $$('#nodata');
+            msgok(nodata,'$msg['msg_faq_empty'].capitalize().');
+                    
+
+        $if data['message']:
+            $if not data['faq']:
+                var smmsg = $$('#nodata');
+            $else:
+                var smmsg = $$('#msg');
+            smmsg.show();
+            $if data['message'][0] == 'ok':
+                msgok(smmsg, "$data['message'][1].capitalize().");
+            $else:
+                msgerr(smmsg, "$data['message'][1].capitalize().");
+            
+
+        $$('#add').button({
+            icons: {primary: 'ui-icon-plus'},
+            text: true
+        });
+
+        
+        $for i in data['faq']:
+            $$('#link-del-$i.id').click(function(){
+                $$("#dialog-confirm-$i.id").dialog({
+                    resizable   : false,
+                    height      :240,
+                    modal       : true,
+                    draggable   : false,
+                    buttons: {
+                        "$msg['cmd_yes']": function() {
+                            $$(this).dialog('close');
+
+                            var dmsg = $$('#msg');
+                            dmsg.show();
+                            dmsg.html("<br><i>$msg['msg_wait']</i>");
+                            
+                            $$.post(
+                                "$ub('/admin/faq/del')",
+                                {id: $i.id, api:1},
+                                function (data)
+                                {
+                                    if (data == 'value')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error'].capitalize().");
+                                    }
+                                    else if (data == 'error')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                                    }
+                                    else if (data == 'ok')
+                                    {
+                                        window.location.href='$ub('/admin/faq')';
+                                    }
+                                }                       
+                            );     
+
+                        },
+                        "$msg['cmd_no']": function() {
+                            $$(this).dialog('close');
+                        }
+                    }
+                });
+
+            });
+
+            
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_admin_faq'].capitalize()
+    &nbsp;
+    [&nbsp;<a href='#new'>$msg['cmd_new']</a>&nbsp;]
+    </h3>
+    <br>
+    $if not data['faq']:
+        <div id='nodata'></div>
+    $else:
+        <div id='msg' style='display: none;'></div>
+        <br>
+        <table class='admin_faq'>
+        <th>$msg['header_faq_category'].capitalize()</th>
+        $for j in ulang.keys():
+            <th>$ulangd(ulang[j][1])</th>
+        <th>$msg['header_faq_action'].capitalize()</th>        
+        $for i in data['faq']:
+            <tr>
+            <td>$i['category'][1]</td>
+            $for j in ulang.keys():
+                $ dat = i['question'][0]
+                $ key = ulang[j][0]
+                <td>$:i['question'][0][key]</td>
+
+            <td width='10%'>
+            <a href="$ub('/admin/faq/edit/')$i.id">$msg['cmd_faq_edit']</a>        
+            &nbsp;
+            <a href='#' id='link-del-$i.id'>$msg['cmd_faq_del']</a>        
+            </td>
+            </tr>
+        </table>
+
+        $for i in data['faq']:        
+            <div style='display: none;'>
+            <div id="dialog-confirm-$i.id" title="$msg['msg_confirm_title'].capitalize()">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin: 0 20px 20px 0;"></span>$msg['msg_faq_del_confirm'].capitalize(): <b>$:i.question[1]</b>?</p>
+            </div>
+            </div>
+
+    <br><br>
+
+    <a name='new'></a>
+    <form action="$ub('/admin/faq/save')" method='post'>
+    <input type='hidden' name='type' value='add'>
+    <h3>$msg['header_faq_new'].capitalize()</h3><br>
+    <table class='admin_faq'>
+
+
+    <tr>
+    <td><b>$msg['header_faq_category'].capitalize()</b>
+    </td>
+    <td>
+    <table class='admin_faq' style='width: 100%;'>
+    <tr>
+    $for j in ulang.keys():
+        $ key = ulang[j][0]
+        <td style='vertical-align: top;'>
+        <span style='font-size: 100%'>$ulangd(ulang[j][1])</span><br>
+        <input type='text' name="category.$key">
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+
+
+    <tr>
+    <td><b>$msg['header_faq_question'].capitalize()</b>
+    </td>
+    <td>
+    <table class='admin_faq'>
+    <tr>
+    $for j in ulang.keys():
+        $ key = ulang[j][0]
+        <td style='vertical-align: top;'>
+        <span style='font-size: 100%'>$ulangd(ulang[j][1])</span><br>
+        <textarea name="question.$key" cols='35' rows='5'></textarea>
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td><b>$msg['header_faq_answer'].capitalize()</b>
+    </td>
+    <td>
+    <table class='admin_faq'>
+    <tr>
+    $for j in ulang.keys():
+        $ key = ulang[j][0]
+        <td style='vertical-align: top;'>
+        <span style='font-size: 100%'>$ulangd(ulang[j][1])</span><br>
+        <textarea name="answer.$key" cols='35' rows='5'></textarea>
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td>$msg['header_faq_file'].capitalize()</td>
+    <td>
+    <select name='file_id'>
+    <option value='0'></option>
+    $for i in data['files']:
+        <option value='$i.id'>$i.name</option>
+    </select>
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td align='right' colspan='2'>
+    <input type='submit' id='add' value="$msg['cmd_faq_add']">
+    </td>
+    </tr>
+
+    </table>
+    </form>
+
+        
+    </div>

@@ -1,0 +1,222 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        $$('textarea').wysiwyg({
+            css : { fontFamily: 'Arial, Tahoma', fontSize : '12px'},
+            controls: {
+                bold : { visible : true },
+                strikeThrough : { visible : true },
+                underline     : { visible : true },
+                  
+                separator00 : { visible : false },
+                 
+                justifyLeft   : { visible : false },
+                justifyCenter : { visible : false },
+                justifyRight  : { visible : false },
+                justifyFull   : { visible : false },
+                  
+                separator01 : { visible : false },
+                  
+                indent  : { visible : false },
+                outdent : { visible : false },
+                  
+                separator02 : { visible : true },
+                  
+                subscript   : { visible : true },
+                superscript : { visible : true },
+                  
+                separator03 : { visible : true },
+                  
+                undo : { visible : false },
+                redo : { visible : false },
+                  
+                separator04 : { visible : false },
+                  
+                insertOrderedList    : { visible : true },
+                insertUnorderedList  : { visible : true },
+                insertHorizontalRule : { visible : false },
+
+                separator05 : { visible : false },
+                
+                createLink : { visible : false },
+                insertImage : { visible : false },
+
+                separator06 : { visible : false },
+                h1mozilla : { visible : false },
+                h2mozilla : { visible : false },
+                h3mozilla : { visible : false },
+                h1 : { visible : false },
+                h2 : { visible : false },
+                h3 : { visible : false },
+                h4 : { visible : false },
+                h5 : { visible : false },
+                h6 : { visible : false },
+
+                separator07 : { visible : true },
+                
+                increaseFontSize: { visible : true },
+                decreaseFontSize: { visible : true },
+                  
+                cut   : { visible : false },
+                copy  : { visible : false },
+                paste : { visible : false },
+                
+                separator08 : { visible : false },
+                
+                
+                
+                separator09 : { visible : false },
+                            
+                html : { visible : true },
+                
+                removeFormat : { visible : false }
+                
+                
+                     
+            }
+        });   
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+                        
+        $if data['message']:
+            var smmsg = $$('#msg');
+            smmsg.show();
+            $if data['message'][0] == 'ok':
+                msgok(smmsg, "$data['message'][1].capitalize().");
+            $else:
+                msgerr(smmsg, "$data['message'][1].capitalize().");
+            
+
+        $$('#edit').button({
+            icons: {primary: 'ui-icon-disk'},
+            text: true
+        });
+
+            
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    <a href="$ub('/admin/news')">$msg['title_admin_news'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['header_news_edit'].capitalize()
+    </h3>
+
+    <br>
+    <div id='msg' style='display: none;'></div>
+    <br>
+    <form action="$ub('/admin/news/save')" method='post'>
+    <input type='hidden' name='type' value='edit'>
+    <input type='hidden' name='id' value="$data['detail'][0].id">
+    <table class='admin_news'>
+
+    <tr>
+    <td><b>$msg['header_news_title'].capitalize()</b>
+    </td>
+    <td>
+    <table class='admin_news'>
+    <tr>
+    $for j in ulang.keys():
+        $ dat = data['detail'][0].title[0]
+        $ key = ulang[j][0]
+        <td style='vertical-align: top;'>
+        <span style='font-size: 100%'>$ulangd(ulang[j][1])</span><br>
+        <textarea type='text' name="title.$key" cols='35' rows='5'>$dat[key]</textarea>
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+
+    <tr>
+    <td>$msg['header_news_description'].capitalize()
+    </td>
+    <td>
+    <table class='admin_news'>
+    <tr>
+    $for j in ulang.keys():
+        $ dat = data['detail'][0].description[0]
+        $ key = ulang[j][0]
+        <td style='vertical-align: top;'>
+        <span style='font-size: 100%'>$ulangd(ulang[j][1])</span><br>
+        <textarea type='text' name="description.$key" cols='35' rows='5'>$dat[key]</textarea>
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td>$msg['header_news_news'].capitalize()
+    </td>
+    <td>
+    <table class='admin_news'>
+    <tr>
+    $for j in ulang.keys():
+        $ dat = data['detail'][0].news[0]
+        $ key = ulang[j][0]
+        <td style='vertical-align: top;'>
+        <span style='font-size: 100%'>$ulangd(ulang[j][1])</span><br>
+        <textarea type='text' name="news.$key" cols='35' rows='5'>$dat[key]</textarea>
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td>$msg['header_news_file'].capitalize()</td>
+    <td>
+    <select name='file_id'>
+    <option value='0'></option>
+    $for i in data['files']:
+        $if data['detail'][0].file_id == i.id:
+            <option value='$i.id' selected>$i.name</option>
+        $else:
+            <option value='$i.id'>$i.name</option>
+    </select>
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td align='right' colspan='2'>
+    <input type='submit' id='edit' value="$msg['cmd_news_save']">
+    </td>
+    </tr>
+
+
+    </table>
+    </form>
+
+        
+    </div>

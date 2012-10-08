@@ -1,0 +1,29 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+       
+        var dmsg = $$('#msg');
+           
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+        
+        msgerr(dmsg, "$msg['msg_error_notfound'].capitalize()."); 
+    });
+    </script>
+
+    <div class='content'>
+    <h3>$msg['msg_error'].capitalize()</h3>
+    <div id='msg'></div>
+    <br>
+    <div>$data</div>
+    </div>

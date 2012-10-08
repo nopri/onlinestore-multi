@@ -1,0 +1,66 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+        $$(document).ready(function(){
+            $$.ajaxSetup({
+                cache: false
+            });
+                    
+            function msgok(c, m)
+            {
+                c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+            }
+
+            
+            $if data['news']:
+                $for i in data['news']:
+                    $if i.news:
+                        $$('#news-link-$i.id').click(function(){
+                            $$(this).hide();
+                            $$('#news-detail-$i.id').show();
+                            return false;
+                        });
+            $else:
+                var dmsg = $$('#news-msg');
+                msgok(dmsg, "$msg['msg_news_none'].capitalize().");
+                
+        });
+    </script>
+
+
+    <div class='content'>
+    <h3>$msg['title_news'].capitalize()</h3>
+    <div id='news-msg'></div>
+
+    <table class='news2'>
+    $for i in data['news']:
+        <tr>
+        <td width='12' valign='top'><span class='dot'>&nbsp;</span></td>
+        <td>
+        <span class='datetime'>$i.date_news</span>
+        <div>
+        $if i.title:
+            <b>$:i.title[1]</b>&nbsp;    
+        $if i.description:
+            $:i.description[1]
+        $if i.news[1]:
+            <a id='news-link-$i.id' href='#' class='linkdetail'>$msg['cmd_detail']</a>
+            <div id='news-detail-$i.id' style='display: none;'>
+                $i.news[1]
+            </div>
+        </div>
+        <br>
+        </td>
+        </tr>
+    </table>
+
+
+
+    </div>

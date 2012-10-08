@@ -1,0 +1,19 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <div class='content'>
+    <h3>$data['page'].capitalize()</h3>
+    <br>
+
+    <p>
+    $:data['content']
+    </p>
+
+
+    </div>

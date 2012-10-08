@@ -1,0 +1,178 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+        
+        $if not data['redir']:
+            var nodata = $$('#nodata');
+            msgok(nodata,'$msg['msg_admin_redir_empty'].capitalize().');
+                    
+
+        $if data['message']:
+            $if not data['redir']:
+                var smmsg = $$('#nodata');
+            $else:
+                var smmsg = $$('#msg');
+            smmsg.show();
+            $if data['message'][0] == 'ok':
+                msgok(smmsg, "$data['message'][1].capitalize().");
+            $else:
+                msgerr(smmsg, "$data['message'][1].capitalize().");
+            
+
+        $$('#add').button({
+            icons: {primary: 'ui-icon-plus'},
+            text: true
+        });
+
+        $$('#edit').button({
+            icons: {primary: 'ui-icon-disk'},
+            text: true
+        });
+
+        
+        $for i in data['redir']:
+            $$('#link-del-$i.id').click(function(){
+                $$("#dialog-confirm-$i.id").dialog({
+                    resizable   : false,
+                    height      :240,
+                    modal       : true,
+                    draggable   : false,
+                    buttons: {
+                        "$msg['cmd_yes']": function() {
+                            $$(this).dialog('close');
+
+                            var dmsg = $$('#msg');
+                            dmsg.show();
+                            dmsg.html("<br><i>$msg['msg_wait']</i>");
+                            
+                            $$.post(
+                                "$ub('/admin/redir/del')",
+                                {id: $i.id, api:1},
+                                function (data)
+                                {
+                                    if (data == 'value')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error'].capitalize().");
+                                    }
+                                    else if (data == 'error')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                                    }
+                                    else if (data == 'ok')
+                                    {
+                                        window.location.href='$ub('/admin/redir')';
+                                    }
+                                }                       
+                            );     
+
+                        },
+                        "$msg['cmd_no']": function() {
+                            $$(this).dialog('close');
+                        }
+                    }
+                });
+
+            });
+
+            
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_admin_redir'].capitalize()
+    &nbsp;
+    [&nbsp;<a href='#new'>$msg['cmd_new']</a>&nbsp;]
+    </h3>
+    <br>
+    $if not data['redir']:
+        <div id='nodata'></div>
+    $else:
+        <div id='msg' style='display: none;'></div>
+        <br>
+        <form action="$ub('/admin/redir/save')" method='post'>
+        <input type='hidden' name='type' value='edit'>
+        <table class='admin_general'>
+        <th>$msg['header_admin_redir_origin'].capitalize()</th>
+        <th>$msg['header_admin_redir_target'].capitalize()</th>
+        <th>$msg['header_admin_redir_action'].capitalize()</th>
+        $for i in data['redir']:
+            $ did = i['id']
+            <tr>
+            <td><input type='text' name="url.$did" value='$i['url']' size='40'></td>
+            <td><input type='text' name="target.$did" value='$i['target']' size='40'></td>
+            <td>
+            <a href='#' id='link-del-$i.id'>$msg['cmd_admin_redir_del']</a>
+            </td>
+            </tr>
+        <tr>
+        <td colspan='3' align='right'>
+        <input type='submit' id='edit' value="$msg['cmd_admin_redir_save']">
+        </td>
+        </tr>
+        </table>
+        </form>
+
+        $for i in data['redir']:        
+            <div style='display: none;'>
+            <div id="dialog-confirm-$i.id" title="$msg['msg_confirm_title'].capitalize()">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin: 0 20px 20px 0;"></span>$msg['msg_admin_redir_del_confirm'].capitalize(): <b>$i['url']</b>?</p>
+            </div>
+            </div>
+
+    <br><br>
+
+
+    <a name='new'></a>
+    <form action="$ub('/admin/redir/save')" method='post'>
+    <input type='hidden' name='type' value='add'>
+    <h3>$msg['header_admin_redir_new'].capitalize()</h3><br>
+    <table class='admin_general'>
+    
+    <tr>
+    <td><b>$msg['header_admin_redir_origin'].capitalize()</b></td>
+    <td><input type='text' name="url.new" value='' size='40'></td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_admin_redir_target'].capitalize()</b></td>
+    <td><input type='text' name="target.new" value='' size='40'></td>
+    </tr>
+
+    <tr>
+    <td>
+    &nbsp;
+    </td>
+    <td align='right'>
+    <input type='submit' id='add' value="$msg['cmd_admin_redir_add']">
+    </td>
+    </tr>
+    </table>
+    </form>
+
+        
+    </div>

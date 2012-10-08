@@ -1,0 +1,134 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+        
+        $$('#btn-save').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+
+        $if data['message']:
+            var dmsg = $$('#msg');
+            $if data['message'][0] == 'ok':
+                msgok(dmsg, "$data['message'][1].capitalize().");
+            $else:
+                msgerr(dmsg, "$data['message'][1].capitalize().");
+
+        
+    });
+    </script>
+
+    <div class='content'>
+    <h3><a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>&nbsp; &rarr; &nbsp; $msg['title_profile'].capitalize()</h3>
+    <br>
+
+    <div id='msg'></div>
+    <br>
+    <form action="$ub('/profile')" method='post'>
+    <table class='profile'>
+
+    <tr>
+    <td>
+    $msg['header_profile_first_name'].capitalize()
+    $:dkget(msg, 'desc_profile_first_name', "<br><span class='profileinfo'>(", ')</span>')</span>
+    </td>
+    <td>
+    <input type='text' name='first_name' value="$data['profile'].first_name">
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    $msg['header_profile_last_name'].capitalize()
+    $:dkget(msg, 'desc_profile_last_name', "<br><span class='profileinfo'>(", ')</span>')</span>
+    </td>
+    <td>
+    <input type='text' name='last_name' value="$data['profile'].last_name">
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    $msg['header_profile_email'].capitalize()
+    $:dkget(msg, 'desc_profile_email', "<br><span class='profileinfo'>(", ')</span>')</span>
+    </td>
+    <td>
+    <input type='text' name='email' value="$data['profile'].email">
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    $msg['header_profile_phone'].capitalize()
+    $:dkget(msg, 'desc_profile_phone', "<br><span class='profileinfo'>(", ')</span>')</span>
+    </td>
+    <td>
+    <input type='text' name='phone' value="$data['profile'].phone">
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    $msg['header_profile_fax'].capitalize()
+    $:dkget(msg, 'desc_profile_fax', "<br><span class='profileinfo'>(", ')</span>')</span>
+    </td>
+    <td>
+    <input type='text' name='fax' value="$data['profile'].fax">
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    $msg['header_profile_web'].capitalize()
+    $:dkget(msg, 'desc_profile_web', "<br><span class='profileinfo'>(", ')</span>')</span>
+    </td>
+    <td>
+    <input type='text' name='web' value="$data['profile'].web">
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    $msg['header_profile_address'].capitalize()
+    $:dkget(msg, 'desc_profile_address', "<br><span class='profileinfo'>(", ')</span>')</span>
+    </td>
+    <td>
+    <textarea cols='40' rows='10' name='address'>$data['profile'].address</textarea>
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    &nbsp;
+    </td>
+    <td>
+    <input type='submit' id='btn-save' value="$msg['cmd_profile_update']">
+    </td>
+    </tr>
+
+    </table>
+    </form>
+
+    </div>

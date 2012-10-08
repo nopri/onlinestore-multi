@@ -1,0 +1,125 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+        
+        $$(function() {
+            $$("#date_from").datepicker({ dateFormat: 'yy-mm-dd', showOn: 'button', showAnim: ''});
+        });
+
+        $$(function() {
+            $$("#date_to").datepicker({ dateFormat: 'yy-mm-dd', showOn: 'button', showAnim: ''});
+        });
+        
+        $$('#btn-search').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+
+        $if data['message']:
+            var nodata = $$('#msg');
+            $$('#msg').show();
+            $if data['message'][0] == 'ok':
+                msgok(nodata,'$data['message'][1].capitalize().');
+            $else:
+                msgerr(nodata,'$data['message'][1].capitalize().');
+
+        
+    });
+    </script>
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_admin_invoice'].capitalize()
+    &nbsp;
+    </h3>
+
+    <div id='msg' style='display: none;'></div>
+    <br>
+    <form action="$ub('/admin/invoice')" method='post'>
+    <table class='admin_invoice'>
+    <tr>
+
+    <td>
+    <b>$msg['header_invoice_date_from'].capitalize()</b>&nbsp;
+    $:dkget(msg, 'desc_invoice_date_from', "&nbsp;<span class='admininfo2'>(", ')</span>&nbsp;')</span>
+    $ df = data['date_from']
+    $if not df:
+        $ df = now('%Y-%m-01') 
+    <input type='text' id='date_from' name='date_from' size='14' value="$df">
+    </td>
+
+    <td>
+    <b>$msg['header_invoice_date_to'].capitalize()</b>&nbsp;
+    $:dkget(msg, 'desc_invoice_date_to', "&nbsp;<span class='admininfo2'>(", ')</span>&nbsp;')</span>
+    $ dt = data['date_to']
+    $if not dt:
+        $ dt = now('%Y-%m-%d') 
+    <input type='text' id='date_to' name='date_to' size='14' value="$dt">
+    </td>
+
+    <td>
+    <b>$msg['header_invoice_closed'].capitalize()</b>&nbsp;
+    <select name='closed'>
+    $for i in [('0', msg['cmd_no']), ('1', msg['cmd_yes'])]:
+        $if i[0] == data['closed']:
+            <option value='$i[0]' selected>$i[1]</option>
+        $else:
+            <option value='$i[0]'>$i[1]</option>    
+    </select>
+    </td>
+
+    <td>
+    <input type='submit' id='btn-search' value="$msg['cmd_search']">
+    </td>
+    </tr>
+
+    </table>
+
+    $if data['invoice']:
+        <br>
+        <table class='admin_invoice'>
+        <th>$msg['header_invoice_id'].capitalize()</th>
+        <th>$msg['header_invoice_total'].capitalize()</th>
+        <th>$msg['header_invoice_date_purchase'].capitalize()</th>
+        <th>$msg['header_invoice_date_paid'].capitalize()</th>
+        <th>$msg['header_invoice_cust_name'].capitalize()</th>
+        <th>$msg['header_invoice_payment_confirm'].capitalize()</th>
+        $for i in data['invoice']:
+            <tr>
+            <td><a href="$ub('/admin/invoice/view/')$i.id">$i.cart_id</a></td>
+            <td align='right'><span class='currency_symbol'>$i.used_currency</span>$i.total[1]</td>
+            <td>$i.date_purchase</td>
+            <td>$i.date_paid</td>
+            <td>$i.cust_name</td>
+            $if i.confirm_info:
+                <td>$i.confirm_info['date']</td>
+            $else:
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+
+    </form>
+    </div>

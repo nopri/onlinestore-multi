@@ -1,0 +1,26 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_admin_product'].capitalize()
+    </h3>
+    <br>
+
+    <table class='admin'>
+    <tr>
+    $for i in data:
+        <td>
+            <a href='$i[1]'>$i[0]</a>
+        </td>
+    </tr>
+    </table>
+    </div>

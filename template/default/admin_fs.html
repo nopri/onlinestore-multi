@@ -1,0 +1,139 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+        
+        $if not data['files']:
+            var nofile = $$('#nofile');
+            msgok(nofile,'$msg['msg_fs_empty'].capitalize().');
+                    
+
+        $if data['error_message']:
+            $if not data['files']:
+                var smmsg = $$('#nofile');
+            $else:
+                var smmsg = $$('#msg');
+            smmsg.show();
+            $ x = data['error_message'][1][0].upper() + data['error_message'][1][1:]
+            msgerr(smmsg, "$msg['msg_error'].capitalize(). $x.");
+            
+
+        $$('#upload').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+
+        
+        $for i in data['files']:
+            $$('#link-del-$i.id').click(function(){
+                $$("#dialog-confirm-$i.id").dialog({
+                    resizable   : false,
+                    height      :240,
+                    modal       : true,
+                    draggable   : false,
+                    buttons: {
+                        "$msg['cmd_yes']": function() {
+                            $$(this).dialog('close');
+
+                            var dmsg = $$('#msg');
+                            dmsg.show();
+                            dmsg.html("<br><i>$msg['msg_wait']</i>");
+                            
+                            $$.post(
+                                "$ub('/admin/fs/del')",
+                                {id: $i.id, api:1},
+                                function (data)
+                                {
+                                    if (data == 'value')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error'].capitalize().");
+                                    }
+                                    else if (data == 'error')
+                                    {
+                                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                                    }
+                                    else if (data == 'ok')
+                                    {
+                                        window.location.href='$ub('/admin/fs')';
+                                    }
+                                }                       
+                            );     
+
+                        },
+                        "$msg['cmd_no']": function() {
+                            $$(this).dialog('close');
+                        }
+                    }
+                });
+
+            });
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3><a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>&nbsp; &rarr; &nbsp; $msg['title_fs'].capitalize()
+    &nbsp;
+    [&nbsp;<a href='#upload'>$msg['cmd_fs_upload']</a>&nbsp;]
+    </h3>
+    <br>
+    $if not data['files']:
+        <div id='nofile'></div>
+    $else:
+        <div id='msg' style='display: none;'></div>
+        <br>
+        <table class='file'>
+        <th>$msg['header_fs_name'].capitalize()</th>
+        <th>$msg['header_fs_size'].capitalize()</th>
+        <th>$msg['header_fs_action'].capitalize()</th>
+        $for i in data['files']:
+            <tr>
+            <td>
+            $if i['name']:
+                <a href="$ub('/admin/fs/view/')$i.id">$i['name']</a>
+            $else:
+                $msg['msg_fs_noname']
+            </td>
+            <td width='15%' align='right'>$i['size']</td>
+            <td width='10%'><a href='#' id='link-del-$i.id'>$msg['cmd_fs_del']</a></td>
+            </tr>
+        </table>
+
+        $for i in data['files']:        
+            <div style='display: none;'>
+            <div id="dialog-confirm-$i.id" title="$msg['msg_confirm_title'].capitalize()">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin: 0 20px 20px 0;"></span>$msg['msg_fs_del_confirm'].capitalize(): <b>$i.name</b>?</p>
+            </div>
+            </div>
+
+    <br>
+    <a name='upload'></a>
+    <form action="$ub('/admin/fs/upload')" method='post' enctype='multipart/form-data'>
+    $msg['msg_fs_upload'].capitalize() ($msg['msg_fs_upload_max'] $data['max_file_size_kb'] KB)
+    &nbsp;
+    <input type='file' name='userfile'>
+    <input type='submit' id='upload' value="$msg['cmd_fs_upload']">
+    </form>
+
+        
+    </div>

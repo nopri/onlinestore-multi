@@ -1,0 +1,116 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+        
+        $$(function() {
+            $$("#date_from").datepicker({ dateFormat: 'yy-mm-dd', showOn: 'button', showAnim: ''});
+        });
+
+        $$(function() {
+            $$("#date_to").datepicker({ dateFormat: 'yy-mm-dd', showOn: 'button', showAnim: ''});
+        });
+        
+        $$('#btn-search').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+
+        $if data['message']:
+            var nodata = $$('#msg');
+            $$('#msg').show();
+            $if data['message'][0] == 'ok':
+                msgok(nodata,'$data['message'][1].capitalize().');
+            $else:
+                msgerr(nodata,'$data['message'][1].capitalize().');
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_admin_stat'].capitalize()
+    &nbsp;
+    </h3>
+
+    <div id='msg' style='display: none;'></div>
+    <br>
+    <form action="$ub('/admin/stat')" method='post'>
+    <table class='admin_stat'>
+    <tr>
+
+    <td>
+    <b>$msg['header_stat_date_from'].capitalize()</b>&nbsp;
+    $:dkget(msg, 'desc_stat_date_from', "&nbsp;<span class='admininfo2'>(", ')</span>&nbsp;')</span>
+    $ df = data['date_from']
+    $if not df:
+        $ df = now('%Y-%m-01') 
+    <input type='text' id='date_from' name='date_from' size='14' value="$df">
+    </td>
+
+    <td>
+    <b>$msg['header_stat_date_to'].capitalize()</b>&nbsp;
+    $:dkget(msg, 'desc_stat_date_to', "&nbsp;<span class='admininfo2'>(", ')</span>&nbsp;')</span>
+    $ dt = data['date_to']
+    $if not dt:
+        $ dt = now('%Y-%m-%d') 
+    <input type='text' id='date_to' name='date_to' size='14' value="$dt">
+    </td>
+
+    <td>
+    <input type='submit' id='btn-search' value="$msg['cmd_search']">
+    </td>
+    </tr>
+
+    </table>
+
+    $if data['stat']:
+        <br>
+        <table class='admin_stat'>
+        $for i in data['stat']:
+            <tr>
+            <td><b>$i['category'].capitalize()</b></td>
+            <td>
+            <table class='admin_stat'>
+            $for j in i['stat']:
+                <tr>
+                $if j['var'].lower() == msg['msg_unknown'].lower():
+                    <td><i>$j['var'].capitalize()</i></td>
+                $else:
+                    <td>$j['var'].capitalize()</td>
+                <td align='right'>$j['val'][0]</td>
+                <td align='right'>$j['val'][1]</td>
+                </tr>
+            <tr>
+            <td>$msg['header_stat_total'].capitalize()</td>
+            <td colspan='2' align='right'>$i['total']</td>
+            </tr>        
+            </table>
+            </td>
+            </tr>
+        </table>
+
+
+    </div>

@@ -1,0 +1,265 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+            
+        $$('#btn-approve_close').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+
+        $$('#btn-disapprove').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+
+        $$('#btn-delete').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+
+        $if data['message']:
+            var nodata = $$('#msg');
+            $$('#msg').show();
+            $if data['message'][0] == 'ok':
+                msgok(nodata,'$data['message'][1].capitalize().');
+            $else:
+                msgerr(nodata,'$data['message'][1].capitalize().');
+
+
+        $$('#btn-approve_close').click(function(){
+            $$("#dialog-confirm-approve").dialog({
+                resizable   : false,
+                height      :240,
+                modal       : true,
+                draggable   : false,
+                buttons: {
+                    "$msg['cmd_yes']": function() {
+                        $$(this).dialog('close');
+
+                        var dmsg = $$('#msg');
+                        dmsg.show();
+                        dmsg.html("<br><i>$msg['msg_wait']</i>");
+                        
+                        $$.post(
+                            "$ub('/admin/invoice/approval')",
+                            {id: $data['invoice'][0].id, type: 'approve', api:1},
+                            function (data)
+                            {
+                                if (data == 'value')
+                                {
+                                    msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error'].capitalize().");
+                                }
+                                else if (data == 'error')
+                                {
+                                    msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                                }
+                                else if (data == 'ok')
+                                {
+                                    window.location.href='$ub('/admin/invoice/view/')$data['invoice'][0].id';
+                                }
+                            }                       
+                        );     
+
+                    },
+                    "$msg['cmd_no']": function() {
+                        $$(this).dialog('close');
+                    }
+                }
+            });
+            
+            
+        });
+
+        $$('#btn-disapprove').click(function(){
+            $$("#dialog-confirm-disapprove").dialog({
+                resizable   : false,
+                height      :240,
+                modal       : true,
+                draggable   : false,
+                buttons: {
+                    "$msg['cmd_yes']": function() {
+                        $$(this).dialog('close');
+
+                        var dmsg = $$('#msg');
+                        dmsg.show();
+                        dmsg.html("<br><i>$msg['msg_wait']</i>");
+                        
+                        $$.post(
+                            "$ub('/admin/invoice/approval')",
+                            {id: $data['invoice'][0].id, type: 'disapprove', api:1},
+                            function (data)
+                            {
+                                if (data == 'value')
+                                {
+                                    msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error'].capitalize().");
+                                }
+                                else if (data == 'error')
+                                {
+                                    msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                                }
+                                else if (data == 'ok')
+                                {
+                                    window.location.href='$ub('/admin/invoice/view/')$data['invoice'][0].id';
+                                }
+                            }                       
+                        );     
+
+                    },
+                    "$msg['cmd_no']": function() {
+                        $$(this).dialog('close');
+                    }
+                }
+            });
+            
+            
+        });
+
+        
+    });
+    </script>
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    <a href="$ub('/admin/invoice')">$msg['title_admin_invoice'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_admin_invoice_view'].capitalize()
+    &nbsp;
+    [&nbsp;<a href='javascript:history.go(-1)'>$msg['cmd_back']</a>&nbsp;]
+    &nbsp;
+    $if data['invoice'][0].done:
+        <span class='invoice_closed'>$msg['msg_invoice_closed']</span>
+    </h3>
+
+    <div id='msg' style='display: none;'></div>
+    <br>
+
+    $if data['invoice']:
+        <table class='admin_invoice'>
+        
+        $if data['invoice'][0].confirm_info:
+            <tr>
+            
+            <td style='vertical-align: top;'><b>$msg['header_invoice_payment_confirm'].capitalize()</b></td>
+            <td>
+            <table class='admin_invoice'>
+            <tr>
+            <td>
+            $msg['header_payment_confirm_date'].capitalize()
+            </td>
+            <td>
+            $data['invoice'][0].confirm_info['date']
+            </td>
+            </tr>
+            <tr>
+            <td>
+            $msg['header_payment_confirm_total'].capitalize()
+            </td>
+            <td align='right'>
+            <span class='currency_symbol'>$data['invoice'][0].used_currency</span>
+            $data['invoice'][0].confirm_info['total']
+            $if data['invoice'][0].confirm_info['total'] == data['invoice'][0].total[0]:
+                <span class='match'>$msg['msg_match']</span>
+            $else:
+                <span class='mismatch'>$msg['msg_mismatch']</span>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            $msg['header_payment_confirm_name'].capitalize()
+            </td>
+            <td>
+            $data['invoice'][0].confirm_info['name']
+            </td>
+            </tr>
+            <tr>
+            <td>
+            $msg['header_payment_confirm_bank'].capitalize()
+            </td>
+            <td>
+            $data['invoice'][0].confirm_info['bank']
+            </td>
+            </tr>
+            <tr>
+            <td>
+            $msg['header_payment_confirm_method'].capitalize()
+            </td>
+            <td>
+            $data['invoice'][0].confirm_info['method']
+            </td>
+            </tr>    
+            <tr>
+            <td>
+            $msg['header_payment_confirm_account'].capitalize()
+            </td>
+            <td>
+            $data['invoice'][0].confirm_info['account']
+            </td>
+            </tr>    
+            <tr>
+            <td>
+            $msg['header_payment_confirm_note'].capitalize()
+            </td>
+            <td>
+            $data['invoice'][0].confirm_info['note']
+            </td>
+            </tr>    
+            </table>
+            </td>
+            </tr>
+
+        $if data['invoice'][0].confirm_info and not data['invoice'][0].done:    
+            <tr>
+            <td style='vertical-align: top;'><b>$msg['header_invoice_action'].capitalize()</b></td>
+            <td>
+            <button id='btn-approve_close'>$msg['cmd_invoice_approve_close']</button>
+            &nbsp;&nbsp;
+            <button id='btn-disapprove'>$msg['cmd_invoice_disapprove']</button>
+            </td>
+            </tr>
+        
+        <tr>
+        <td colspan='2'>
+        <pre>
+        $data['invoice'][0].invoice_text
+        </pre>
+        </td>
+        </tr>
+        </table>
+
+        <div style='display: none;'>
+        <div id="dialog-confirm-approve" title="$msg['msg_confirm_title'].capitalize()">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin: 0 20px 20px 0;"></span>$msg['msg_invoice_approve_confirm'].capitalize()?</p>
+        </div>
+        </div>
+
+        <div style='display: none;'>
+        <div id="dialog-confirm-disapprove" title="$msg['msg_confirm_title'].capitalize()">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin: 0 20px 20px 0;"></span>$msg['msg_invoice_disapprove_confirm'].capitalize()?</p>
+        </div>
+        </div>
+
+
+    </div>

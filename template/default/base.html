@@ -1,0 +1,226 @@
+$def with(menu, data, content, url)
+$if mobile and mobile=='xhtmlmp':
+    <?xml version="1.0"?>
+    <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>$content.title</title>
+      </head>
+      <body>
+        $content.title
+        <br><br>
+        <img src="$ub('/fs/')$logo()[0].id" height='70'>
+        <br>
+        <p>$:content</p>
+        <br>
+        <a href="$ub('/browser/set/desktop')">$msg['cmd_version_desktop']</a>
+      </body>
+    </html>
+$elif mobile and mobile=='wml':
+    <?xml version="1.0"?>
+    <!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.3//EN" "http://www.wapforum.org/DTD/wml13.dtd">
+    <wml>
+      <card id="main" title="$content.title">
+        $content.title
+        <br>      
+        <p>
+        $:content
+        </p>
+        <br>
+        <a href="$ub('/browser/set/desktop')">$msg['cmd_version_desktop']</a>
+      </card>
+    </wml>
+$else:
+    <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
+    <html>
+    <head>
+    $:favicon()
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    $for i in meta():
+        $ s = ''
+        $for k in i.keys():
+            $ s += "%s='%s' " %(k, i[k])
+        <meta $:s.strip()>
+    <title>$content.title</title>
+    <link rel="stylesheet" type="text/css" href="$ub('/static/js/jqui181/themes/south-street/jquery.ui.all.css')">
+    <link rel="stylesheet" type="text/css" href="$ub('/static/etc/default/style.css')">
+    <link rel="stylesheet" type="text/css" href="$ub('/static/js/jwys06/jquery.wysiwyg.css')">
+    <script type='text/javascript' src="$ub('/static/js/jqui181/jquery-1.4.2.min.js')"></script>
+    <script type='text/javascript' src="$ub('/static/js/jqui181/jquery-ui-1.8.1.custom.min.js')"></script>
+    <script type='text/javascript' src="$ub('/static/js/jwys06/jquery.wysiwyg.js')"></script>
+    </head>
+    <body>
+
+    <div class='header'>
+    <div class='logo'>
+    $if logo():
+        $if 'image' in logo()[0].type.lower():
+            <img src="$ub('/fs/')$logo()[0].id" height='70'>
+        $elif 'shockwave-flash' in logo()[0].type.lower():
+            $ lf = '%s%s' %(ub('/fs/'), logo()[0].id)
+            $:iflash(lf, height='70', scale='default')
+        $else:
+            &nbsp;
+    </div>
+    <div class='lang'>
+    $ langs = ulang
+    $ langsk = langs.keys()
+    $ langsk.sort()
+    $for i in langsk:
+        $if i != 'default':
+            $ la = langs[i]
+            <a href="$ub('/lang/set/')$la[0]" title='$la[1]'><img src="$ub(la[2])"></a>
+    </div>
+
+    <div class='menu'>
+    $ x = 0
+    $ mchars = 0
+    $for i in menu:
+        <span>
+        $ x = x + 0  #x + 1 to disable dot at end; x + 0 to enable dot at end; 
+        $ mclass = 'menuactive'
+        $if url.startswith('/admin/') or url in adminurlgroup:
+            $if i[1].find('/admin') > -1:
+                $ mclass = 'menuselected'            
+            $elif ub(url) == i[1]:
+                $ mclass = 'menuselected'
+        $elif url.startswith('/cart/'):
+            $if i[1].find('/cart') > -1:
+                $ mclass = 'menuselected'            
+        $else:
+            $if ub(url) == i[1]:
+                $ mclass = 'menuselected'
+
+        <a href='$i[1]' class='$mclass'>$i[0]</a>
+        $if x < len(menu):
+            <span class='dot'> &nbsp;</span>
+        </span>
+        $ mchars = mchars + len(i[0])
+    </div>
+
+
+    </div>
+        <script type='text/javascript'>
+            $$(document).ready(function(){
+                var x = $$('.menu').width();
+                var y = $mchars;
+                var z = Math.round((x/y)) + 1;
+                if (z> 12) { z = 12};
+                var z2 = z.toString() + 'pt';
+                $$('.menu').css('font-size', z2);
+            });
+        </script>
+
+
+
+    $if data.has_key('sticky') and data['sticky']:
+        <script type='text/javascript'>
+            $$(document).ready(function(){
+                function msgstk(c, m)
+                {
+                    c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-pin-s" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+                }
+                
+                var dmsg = $$('#sticky');
+                msgstk(dmsg, "$data['sticky'].capitalize()");
+                
+            });
+        </script>
+        <div id='sticky' class='sticky'></div>
+
+    $if data.has_key('news') and data['news'] and url!='/news':
+        <script type='text/javascript'>
+            $$(document).ready(function(){
+                $$.ajaxSetup({
+                    cache: false
+                });
+                
+                $$('#news-btn-close').click(function(){
+                    $$.post(
+                        "$ub('/news/hide')",
+                        {api:1},
+                        function (data)
+                        {                   
+                            if (data == 'ok')
+                            {
+                                $$('#news-flash').hide();
+                            }
+                        }                       
+                    );                    
+
+                });
+                
+                    
+                $for i in data['news']:
+                    $if i.news:
+                        $$('#news-link-$i.id').click(function(){
+                            $$(this).hide();
+                            $$('#news-detail-$i.id').show();
+                            return false;
+                        });
+            });
+        </script>
+
+
+        <div class='news' id='news-flash'>
+        <b>$msg['title_news'].capitalize()</b>
+        &nbsp;&nbsp;[<a id='news-btn-close' href='#'>$msg['cmd_close']</a>]
+        <table>
+        $for i in data['news']:
+            <tr>
+            <td width='12' valign='top'><span class='dot'>&nbsp;</span></td>
+            <td>
+            <span class='datetime'>$i.date_news</span>
+            <div>
+            $if i.title:
+                <b>$:i.title[1]</b>&nbsp;
+            $if i.description:
+                $:i.description[1]
+            $if i.news[1]:
+                <a id='news-link-$i.id' href='#' class='linkdetail'>$msg['cmd_detail']</a>
+                <div id='news-detail-$i.id' style='display: none;'>
+                    $:i.news[1]
+                </div>
+            </div>
+            </td>
+            </tr>
+        </table>
+        </div>
+
+
+
+
+    $if data.has_key('yahoo') and data['yahoo']:
+        <div class='yahoo'>
+        $for i in data['yahoo']:
+            <a href='http://messenger.yahoo.com/edit/send/?.target=$i.account[1][0]'>
+            <img src='$i.account[1][2]' border='0'>
+            </a>
+        </div>
+
+    $if data.has_key('link') and data['link']:
+        <div class='links'>
+        $for i in data['link']:
+            $:i.code
+        </div>
+
+
+    $:content
+
+
+    $if data.has_key('extra') and data['extra']:
+        <div class='extrainfo'>
+        $:data['extra']
+        </div>
+
+    $if data.has_key('promo_host') and data['promo_host']:
+        <div class='copyright'>
+        $:data['promo_host']
+        </div>
+
+    <div class='rendertime'>
+    $rt() 
+    </div>
+    </body>
+    </html>
+

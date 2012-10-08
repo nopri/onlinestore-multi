@@ -1,0 +1,125 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+        
+        $$('#btn-passwd').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+        
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+
+        $$('#btn-passwd').click(function(){
+            var oldpass = $$('#oldpass');
+            var newpass1 = $$('#newpass1');
+            var newpass2 = $$('#newpass2');
+            
+            var dmsg = $$('#msg');
+
+            dmsg.show();                           
+            dmsg.html("<br><i>$msg['msg_wait']</i>");
+            
+            $$.post(
+                "$ub('/passwd')",
+                {old_password: oldpass.val(), new_password_1: newpass1.val(), new_password_2: newpass2.val(), api:1},
+                function (data)
+                {
+                    if (data == 'value')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_input_error_required'].capitalize().");
+                    }
+                    else if (data == 'error')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                    }
+                    else if (data == 'auth')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_passwd_error_auth'].capitalize(). ");
+                    }
+                    else if (data == 'mismatch')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_passwd_error_mismatch'].capitalize(). ");
+                    }
+                    else if (data == 'same')
+                    {
+                        msgerr(dmsg, "$msg['msg_error'].capitalize(). $msg['msg_passwd_error_same_old'].capitalize(). ");
+                    }
+                    else if (data == 'ok')
+                    {
+                        msgok(dmsg, "$msg['msg_passwd_success'].capitalize().");
+                        oldpass.val('');
+                        newpass1.val('');
+                        newpass2.val('');
+                    }
+                }                       
+            );                    
+            
+        })
+
+        
+    });
+    </script>
+
+    <div class='content'>
+    <h3><a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>&nbsp; &rarr; &nbsp; $msg['title_passwd'].capitalize()</h3>
+    <br>
+
+    <div id='msg'></div>
+    <br>
+    <table class='passwd'>
+    <tr>
+    <td>
+    <b>$msg['field_password_old'].capitalize()</b>
+    </td>
+    <td>
+    <input type='password' id='oldpass'>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <b>$msg['field_password_new_1'].capitalize()</b>
+    </td>
+    <td>
+    <input type='password' id='newpass1'>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <b>$msg['field_password_new_2'].capitalize()</b>
+    </td>
+    <td>
+    <input type='password' id='newpass2'>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    &nbsp;
+    </td>
+    <td>
+    <button id='btn-passwd'>$msg['cmd_passwd']</button>
+    </td>
+    </tr>
+
+    </table>
+
+
+    </div>

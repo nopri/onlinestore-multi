@@ -1,0 +1,251 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+
+        $$('#save').button({
+            icons: {primary: 'ui-icon-disk'},
+            text: true
+        });
+
+        
+        $if data['message']:
+            var dmsg = $$('#msg');
+            msgok(dmsg, "$msg['msg_sys_saved'].capitalize().");
+    });
+    </script>
+
+    <div class='content'>
+    <h3><a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>&nbsp; &rarr; &nbsp; $msg['title_system'].capitalize()</h3>
+    <br>
+
+    <div id='msg'></div><br>
+
+    <form action="$ub('/admin/system')" method='post'>
+
+    <table class='system'>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_site_description'].capitalize()
+    $if msg['desc_sys_site_description']:
+        <br>
+        <span class='systeminfo'>($msg['desc_sys_site_description'])</span>
+    </td>
+    <td>
+    <table class='system2'>
+    $for i in ulang.keys():
+        $ dat = data['site_description']
+        $ key = ulang[i][0]
+        <tr>
+        <td width='25%' valign='top'>$ulangd(ulang[i][1])</td>
+        <td><input type='text' name='site_desc.$key' value='$dat[key]'></td>
+        </tr>
+    </table>
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_site_keywords'].capitalize()
+    $if msg['desc_sys_site_keywords']:
+        <br>
+        <span class='systeminfo'>($msg['desc_sys_site_keywords'])</span>
+    </td>
+    <td>
+    <input type='text' name='keywords' value="$data['keywords']">
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_extra_info'].capitalize()
+    $if msg['desc_sys_extra_info']:
+        <br>
+        <span class='systeminfo'>($msg['desc_sys_extra_info'])</span>
+    </td>
+    <td>
+    <table class='system2'>
+    $for i in ulang.keys():
+        $ dat = data['extra_info']
+        $ key = ulang[i][0]
+        <tr>
+        <td width='25%' valign='top'>$ulangd(ulang[i][1])</td>
+        <td><input type='text' name='extra_info.$key' value='$dat[key]'></td>
+        </tr>
+    </table>
+    </td>
+    </tr>
+
+
+    $if data['cart']:
+        <tr>
+        <td width='20%' valign='top'>
+        $msg['header_sys_use_cart'].capitalize()
+        $if msg['desc_sys_use_cart']:
+            <br>
+            <span class='systeminfo'>($msg['desc_sys_use_cart'])</span>
+        </td>
+        <td>
+        <select name='use_cart'>
+        $for i in [ ('', msg['cmd_no']), ('1', msg['cmd_yes']) ]:
+            $if data['use_cart'] == i[0]:
+                <option value='$i[0]' selected>$i[1]</option>
+            $else:
+                <option value='$i[0]'>$i[1]</option>
+        </select>
+        &nbsp;
+        $msg['header_sys_cart_check_stock'].capitalize()
+        &nbsp;
+        <select name='cart_check_stock'>
+        $for i in [ ('', msg['cmd_no']), ('1', msg['cmd_yes']) ]:
+            $if data['cart_check_stock'] == i[0]:
+                <option value='$i[0]' selected>$i[1]</option>
+            $else:
+                <option value='$i[0]'>$i[1]</option>
+        </select>
+        </td>
+        </tr>
+
+        <tr>
+        <td width='20%' valign='top'>
+        $msg['header_sys_invoice_extra_info'].capitalize()
+        $if msg['desc_sys_invoice_extra_info']:
+            <br>
+            <span class='systeminfo'>($msg['desc_sys_invoice_extra_info'])</span>    
+        </td>
+        <td>
+        <table class='system2'>
+        $for i in ulang.keys():
+            $ dat = data['invoice_extra_info']
+            $ key = ulang[i][0]
+            <tr>
+            <td width='25%' valign='top'>$ulangd(ulang[i][1])</td>
+            <td><input type='text' name='invoice_extra_info.$key' value='$dat[key]'></td>
+            </tr>
+        </table>
+        </td>
+        </tr>
+
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_currency'].capitalize()
+    $if msg['desc_sys_currency']:
+        <br>
+        <span class='systeminfo'>($msg['desc_sys_currency'])</span>    
+    </td>
+    <td>
+    <select name='currency'>
+    $for i in data['all_currency']:
+        $if data['currency'].id == i.id:
+            <option value='$i.id' selected>$i.name - $i.csymbol</option>
+        $else:
+            <option value='$i.id'>$i.name - $i.csymbol</option>
+    </select>
+    </td>
+    </tr>
+
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_template'].capitalize()
+    $if msg['desc_sys_template']:
+        <br>
+        <span class='systeminfo'>($msg['desc_sys_template'])</span>    
+    </td>
+    <td>
+    <select name='template'>
+    $for i in data['all_template']:
+        $if data['template'] == i:
+            <option value='$i' selected>$i</option>
+        $else:
+            <option value='$i'>$i</option>
+    </select>
+    </td>
+    </tr>
+
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_logo_file'].capitalize()
+    $if msg['desc_sys_logo_file']:
+        <br>
+        <span class='systeminfo'>($msg['desc_sys_logo_file'])</span>    
+    </td>
+    <td>
+    <select name='logo_file'>
+    <option value=''></option>
+    $for i in data['all_files']:
+        $if data['logo_file'] == i.id:
+            <option value='$i.id' selected>$i.name</option>
+        $else:
+            <option value='$i.id'>$i.name</option>
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_news_max'].capitalize()
+    $:dkget(msg, 'desc_sys_news_max', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='news_max' size='4' value="$data['news_max']">
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_site_offline'].capitalize()
+    $if msg['desc_sys_site_offline']:
+        <br>
+        <span class='systeminfo'>($msg['desc_sys_site_offline'])</span>    
+    </td>
+    <td>
+    <select name='site_offline'>
+    $for i in [ ('', msg['cmd_no']), ('1', msg['cmd_yes']) ]:
+        $if data['offline'] == i[0]:
+            <option value='$i[0]' selected>$i[1]</option>
+        $else:
+            <option value='$i[0]'>$i[1]</option>
+
+    </select>
+    </td>
+    </tr>
+        
+
+    <tr>
+    <td colspan='2' align='right'>
+    <input type='submit' id='save' value="$msg['cmd_save']">
+    </td>
+    </tr>
+    </table>
+
+    </form>
+        
+    </div>

@@ -1,0 +1,167 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+
+        $$('#submit').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: true
+        });
+
+        $$('#reload').click(function(){
+            $$('#captchaimg').attr("src", "$ub('/captcha')?" + Date());
+        });
+
+
+        $if data['message']:
+            var smmsg = $$('#msg');
+            smmsg.show();
+            $if data['message'][0] == 'ok':
+                $if not data['message'][1]:
+                    $ allok = "%s<br><br>%s<br>%s" %(msg['msg_thankyou'].capitalize(), msg['msg_payment_confirm_done_1'].capitalize(), msg['msg_payment_confirm_done_2'].capitalize())
+                    msgok(smmsg, "$:allok.");
+                $else:
+                    msgok(smmsg, "$data['message'][1].capitalize().");
+            $else:
+                msgerr(smmsg, "$data['message'][1].capitalize().");
+
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3>$msg['title_payment_confirm'].capitalize()</h3>
+    <br>
+    <div id='msg' style='display: none;'></div>
+    <br>
+    <form action="$ub('/payment/confirm')" method='post'>
+    <table class='payment_confirm'>
+
+    <tr>
+    <td><b>$msg['header_payment_confirm_invoice'].capitalize()</b></td>
+    <td><input type='text' name='invoice'></td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_payment_confirm_date'].capitalize()</b></td>
+    <td>
+    $msg['header_payment_confirm_date_day'].capitalize()&nbsp;
+    <select name='date_day'>
+    $for i in data['date_range'][0][0]:
+        $if i == data['date_range'][0][1]:
+            <option value='$i' selected>$i</option>
+        $else:
+            <option value='$i'>$i</option>
+    </select>
+    &nbsp;
+    $msg['header_payment_confirm_date_month'].capitalize()&nbsp;
+    <select name='date_month'>
+    $for i in data['date_range'][1][0]:
+        $if i == data['date_range'][1][1]:
+            <option value='$i' selected>$i</option>
+        $else:
+            <option value='$i'>$i</option>
+    </select>
+    &nbsp;
+    $msg['header_payment_confirm_date_year'].capitalize()&nbsp;
+    <select name='date_year'>
+    $for i in data['date_range'][2][0]:
+        $if i == data['date_range'][2][1]:
+            <option value='$i' selected>$i</option>
+        $else:
+            <option value='$i'>$i</option>
+    </select>
+    &nbsp;
+    </td>
+    </tr>
+
+
+    <tr>
+    <td><b>$msg['header_payment_confirm_name'].capitalize()</b></td>
+    <td><input type='text' name='name'></td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_payment_confirm_total'].capitalize()</b></td>
+    <td><input type='text' name='total'></td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_payment_confirm_bank'].capitalize()</b></td>
+    <td>
+    <select name='bank'>
+    $for i in data['all_bank']:
+        <option value="$i.name">$i.name</option>
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_payment_confirm_method'].capitalize()</b></td>
+    <td>
+    <select name='method'>
+    $for i in data['method']:
+        $ x = i
+        $if x != x.upper():
+            $ x = x.capitalize()
+        <option value="$x">$x</option>
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    $msg['header_payment_confirm_account'].capitalize()
+    $if msg['desc_payment_confirm_account']:
+        <br>
+        <span class='payment_confirm_info'>($msg['desc_payment_confirm_account'])</span>
+    </td>
+    <td><input type='text' name='account'></td>
+    </tr>
+
+
+    <tr>
+    <td>$msg['header_payment_confirm_note'].capitalize()</td>
+    <td><textarea name='note' cols='30' rows='6'></textarea></td>
+    </tr>
+
+    <tr>
+    <td><b>$msg['header_captcha'].capitalize()</b></td>
+    <td>
+    <a name='a-captcha'></a>
+    <img id='captchaimg' src="$ub('/captcha')?$now()">&nbsp;(<a href='#a-captcha' id='reload'>$msg['cmd_captcha_reload']</a>)<br>
+    <br><input type='text' name='captcha'></td>
+    </tr>   
+
+
+
+    <tr>
+    <td>&nbsp;</td>
+    <td align='right'><input id='submit' type='submit' value="$msg['cmd_confirm']"></td>
+    </tr>
+
+    </table>
+    </form>
+
+
+    </div>

@@ -1,0 +1,48 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$('textarea').click(function(){
+            $$(this).select();
+        });
+        
+    });
+    </script>
+
+
+
+    <div class='content'>
+    <h3>
+    <a href="$ub('/admin')">$msg['title_admin'].capitalize()</a>
+    &nbsp; &rarr; &nbsp; 
+    $msg['title_promote'].capitalize()
+    </h3>
+    <br>
+
+    <table class='admin_promote'>
+    <th>$msg['header_promote_style'].capitalize()</th>
+    <th>$msg['header_promote_code'].capitalize()</th>
+    <th>$msg['header_promote_output'].capitalize()</th>
+    $for i in data['promote']:
+        <tr>
+        <td>
+        $i['style']
+        </td>        
+        <td>
+        <textarea cols='40' rows='3' readonly>$i['code']</textarea>
+        </td>        
+        <td>
+        $:i['code']
+        </td>            
+        </tr>
+    </table>
+
+        
+    </div>

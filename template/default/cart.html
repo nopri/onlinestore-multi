@@ -1,0 +1,163 @@
+$def with(title, data)
+
+$var title: $title
+
+$if mobile and mobile == 'xhtmlmp':
+    $msg['msg_mobile_not_available'].capitalize().
+$elif mobile and mobile == 'wml':
+    $msg['msg_wap_not_available'].capitalize().
+$else:
+    <script type='text/javascript'>
+    $$(document).ready(function(){
+        $$.ajaxSetup({
+            cache: false
+        });
+           
+        function msgok(c, m)
+        {
+            c.html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px;"></span>' + m + '</div>');
+        }
+
+        function msgerr(c, m)
+        {
+            c.html('<div class="ui-state-error ui-corner-all" style="margin-top: 10px; padding: 10px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px;"></span>' + m  + '</div>');
+        } 
+        
+        $if data['cart'][0]:
+            $$('#cart-empty').button({
+                icons: {primary: 'ui-icon-trash'},
+                text: true
+            });
+            
+
+            $$('#cart-checkout').button({
+                icons: {primary: 'ui-icon-gear'},
+                text: true
+            });
+            
+            
+            $$('#cart-empty').click(function(){
+                $$("#dialog-confirm").dialog({
+                    resizable   : false,
+                    height      :240,
+                    modal       : true,
+                    draggable   : false,
+                    buttons: {
+                        "$msg['cmd_yes']": function() {
+                            $$(this).dialog('close');
+
+                            var mcnt = $$('#cart-msg');
+                            mcnt.show();
+                            mcnt.html("<br><i>$msg['msg_wait']</i>");
+                            $$.post(
+                                "$ub('/cart/empty')",
+                                {api:1},
+                                function (data)
+                                {
+                                    if (data == 'error')
+                                    {
+                                        msgerr(mcnt, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                                    }
+                                    else if (data == 'ok')
+                                    {
+                                        window.location.href='$ub('/cart')';
+                                    }
+                                }                       
+                            );     
+
+                        },
+                        "$msg['cmd_no']": function() {
+                            $$(this).dialog('close');
+                        }
+                    }
+                });
+                
+            });
+
+            $$('#cart-checkout').click(function(){
+                window.location.href='$ub('/cart/checkout')';
+            });
+
+        $else:
+            var nocart = $$('#nocart');
+            msgok(nocart,'$msg['msg_cart_empty'].capitalize().');
+                    
+        
+        $for i in data['cart'][0]:
+            $$('#link-del-$i[0]').click(function(){
+                var mcnt = $$('#cart-msg');
+                mcnt.show();
+                mcnt.html("<br><i>$msg['msg_wait']</i>");
+                
+                $$.post(
+                    "$ub('/cart/del')",
+                    {vid: $i[0], api:1},
+                    function (data)
+                    {
+                        if (data == 'value')
+                        {
+                            msgerr(mcnt, "$msg['msg_error'].capitalize(). $msg['msg_input_error'].capitalize().");
+                        }
+                        else if (data == 'error')
+                        {
+                            msgerr(mcnt, "$msg['msg_error'].capitalize(). $msg['cmd_please'].capitalize() <a href='$ub('/contact')'>$msg['menu_contact']</a>.");
+                        }
+                        else if (data == 'ok')
+                        {
+                            window.location.href='$ub('/cart')';
+                        }
+                    }                       
+                );     
+            });
+
+    });
+    </script>
+
+    <div class='content'>
+    <h3>$msg['title_cart'].capitalize()</h3>
+    <br>
+    $if not data['cart'][0]:
+        <div id='nocart'></div>
+    $else:
+        <div id='cart-msg' style='display: none;'></div>
+        <br>
+        <table class='cart'>
+        <th>$msg['header_cart_product'].capitalize()</th>
+        <th>$msg['header_cart_qty'].capitalize()</th>
+        <th>$msg['header_cart_price'].capitalize()</th>
+        <th>$msg['header_cart_vat']</th>
+        <th>$msg['header_cart_subtotal'].capitalize()</th>
+        <th>$msg['header_cart_action'].capitalize()</th>
+        $for i in data['cart'][0]:
+            <tr>
+            <td>$i[2]</td>
+            <td align='right'>$i[3][1]</td>
+            <td align='right'><span class='currency_symbol'>$data['cart'][3]</span>$i[4][1]</td>
+            <td align='right'><span class='currency_symbol'>$data['cart'][3]</span>$i[5][1]</td>
+            <td align='right'><span class='currency_symbol'>$data['cart'][3]</span>$i[6][1]</td>
+            <td><a href='#' id='link-del-$i[0]'>$msg['cmd_cart_del']</a></td>
+            </tr>
+        <!--#-->
+        <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><b>$msg['header_cart_total'].capitalize()</b></td>
+        <td align='right'><span class='currency_symbol'>$data['cart'][3]</span>$data['cart'][1][1]</td>
+        <td>&nbsp;</td>
+        </tr>
+        </table>
+        
+        <br>
+        <button id='cart-empty'>$msg['cmd_cart_empty']</button>
+        &nbsp;&nbsp;
+        <button id='cart-checkout'>$msg['cmd_cart_checkout']</button>
+        
+        <div style='display: none;'>
+        <div id="dialog-confirm" title="$msg['msg_confirm_title'].capitalize()">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin: 0 20px 20px 0;"></span>$msg['msg_cart_empty_confirm'].capitalize()?</p>
+        </div>
+        </div>
+
+        
+    </div>
