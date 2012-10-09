@@ -11,11 +11,13 @@ Using:
 - GeoIP
 - MySQL 
 
-*) Bundled with old version 
+*) Bundled (old version) 
 
 WARNING: 
 - need code cleanup (not working until code cleanup is done)
 - need at least one font file (ttf)
-- will be rewritten for single site/domain (should be done before end of 2012)
+- will be rewritten for single site/domain
+  or keep it multi site 
+  (should be done before end of 2012)   
 
 Thank you :)
