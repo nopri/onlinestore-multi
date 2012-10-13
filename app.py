@@ -70,7 +70,7 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.2'
+VERSION = '0.3'
 NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False

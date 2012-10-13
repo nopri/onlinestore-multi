@@ -3,17 +3,20 @@ onlinestore-multi, Simple Online Store application
 2010
 GPL 
 
+Screenshots: https://github.com/nopri/onlinestore-multi/wiki
+
 
 Features:
 - Run as WSGI Application
 - Multi Language (currently English and Bahasa Indonesia)
-- Template Support
+- Template/Theme Support
 - File Manager 
 - Product Category/Group/Item
 - Custom Link
 - News Module
 - FAQ Module
-- User-Defined Content (Custom URL)
+- User-Defined Content
+- Shopping Cart
 - Simple Invoice Management
 - Simple Statistics
 - Custom Membership Level  
