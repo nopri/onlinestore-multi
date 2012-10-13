@@ -1,0 +1,32 @@
+[account]
+user = 
+pass = 
+level = enterprise
+
+[db]
+host = localhost
+user = onlinestore
+pass = 
+name = onlinestore 
+
+[mail]
+smtp = 
+user = 
+pass =  
+default = 
+webmail = 
+
+[session]
+dir = /tmp/onlinestore-multi-session/
+
+[template]
+dir = /path/to/onlinestore-multi/template/
+
+[url]
+base = /
+
+[font]
+dir = /usr/share/fonts/truetype/freefont/
+
+[doc]
+admin = /path/to/onlinestore-multi/README.txt

@@ -82,7 +82,7 @@ CONFIG_FILE_DEFAULT = 'config.ini'
 BASEURL_DEFAULT = '/store' 
 HOME_DEFAULT = '/product'
 TEMPLATE_DEFAULT = 'default'
-LANG_DEFAULT = 'id_ID'
+LANG_DEFAULT = 'en_US'
 MAIL_DEFAULT = '%s <%s>' %(DOMAIN, cget('mail', 'default'))
 PAYMENT_TYPE = [1,2,3] 
 FORCE_SINGLE_CURRENCY = True
@@ -2004,8 +2004,9 @@ def proc_check_http_env(handle):
         ret = True
     else:
         s = chost.split('.')
-        if len(s) == 3 and '.'.join(s[1:]) == domain and s[0] in ALLOWED_SUBDOMAIN:
-            ret = True
+        ret = True #quick hack as of 13-October-2012
+        #if len(s) == 3 and '.'.join(s[1:]) == domain and s[0] in ALLOWED_SUBDOMAIN:
+        #   ret = True
     
     #
     if ret:
