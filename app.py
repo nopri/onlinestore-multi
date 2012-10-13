@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #
-#(c) Noprianto, 2010
+#(c) Noprianto <nop@tedut.com>, 2010, GPL
 #
 
 
@@ -44,7 +44,7 @@ reload(m)
 
 
 web.config.debug = False
-web.config.session_parameters['cookie_name'] = 'ACNSESSION'
+web.config.session_parameters['cookie_name'] = 'SESSION'
 web.config.session_parameters['ignore_expiry'] = True 
 web.config.session_parameters['timeout'] = 1800 #30 minute
 
@@ -70,8 +70,8 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '10.09.20.02'
-NAME = 'Amerta Online Store Portal'
+VERSION = '0.2'
+NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False
 PS = os.path.sep 
