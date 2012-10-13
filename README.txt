@@ -18,6 +18,7 @@ Features:
 - Simple Statistics
 - Custom Membership Level  
 - Send Email (Cart Checkout)
+- Captcha (Random Font)
 - More
 
 
