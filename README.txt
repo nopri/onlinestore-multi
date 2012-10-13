@@ -7,7 +7,18 @@ GPL
 Features:
 - Run as WSGI Application
 - Multi Language (currently English and Bahasa Indonesia)
--  
+- Template Support
+- File Manager 
+- Product Category/Group/Item
+- Custom Link
+- News Module
+- FAQ Module
+- User-Defined Content (Custom URL)
+- Simple Invoice Management
+- Simple Statistics
+- Custom Membership Level  
+- Send Email (Cart Checkout)
+- More
 
 
 Using:
@@ -18,13 +29,13 @@ Using:
 - BeautifulSoup
 - GeoIP
 - Python Imaging Library
-- MySQL 
+- MySQL (and MySQLdb) 
 
  
 Installation (with Python already installed):
 - We will use Apache HTTP Server for WSGI.
 
-- Install: web.py, PyYAML, BeautifulSoup, Python GeoIP, PIL, MySQL Server, Python MySQLDB
+- Install: web.py, PyYAML, BeautifulSoup, Python GeoIP, PIL, MySQL Server, Python MySQLdb
   Ubuntu-based distribution (put command in one line):
   $ sudo apt-get install python-webpy python-yaml python-beautifulsoup python-geoip python-imaging mysql-server python-mysqldb
 
