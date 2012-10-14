@@ -9,13 +9,14 @@ Screenshots: https://github.com/nopri/onlinestore-multi/wiki
 Features:
 - Run as WSGI Application
 - Multi Language (currently English and Bahasa Indonesia)
-- Template/Theme Support
+- Pretty URL
+- Template/Theme Support (bundled: 4)
 - File Manager 
 - Product Category/Group/Item
-- Custom Link
+- Link/Widget Support
 - News Module
 - FAQ Module
-- User-Defined Content
+- User Contents (+Menu)
 - Shopping Cart
 - Simple Invoice Management
 - Simple Statistics
