@@ -1,32 +1,48 @@
-[account]
-user = 
-pass = 
+#all account level will be enterprise in the future
+#please do not change the value
+#just ignore this section
+[account] 
 level = enterprise
 
+#MySQL database connection parameter
+#please replace the defaults with your configuration
 [db]
 host = localhost
 user = onlinestore
 pass = 
 name = onlinestore 
 
+#SMTP setting, for sending email
+#smtp: host
+#user: smtp user
+#default: send as this user (shows in email) 
 [mail]
 smtp = 
 user = 
 pass =  
-default = 
+default = info@
 webmail = 
 
+#Session
+#dir: session directory
 [session]
 dir = /tmp/onlinestore-multi-session/
 
+#Template
+#dir: template directory, please replace /path/to
 [template]
 dir = /path/to/onlinestore-multi/template/
 
+#URL 
 [url]
 base = /
 
+#Font
+#dir: font directory, containing TTF font file(s)
 [font]
 dir = /usr/share/fonts/truetype/freefont/
 
+#doc
+#admin: admin documentation
 [doc]
 admin = /path/to/onlinestore-multi/README.txt

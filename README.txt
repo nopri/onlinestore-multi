@@ -29,12 +29,15 @@ Features:
 Using:
 - Python
 - web.py
-- jQuery (bundled, old version)
+- jQuery/jQueryUI (bundled, old version)
 - PyYAML
 - BeautifulSoup
 - GeoIP
 - Python Imaging Library
 - MySQL (and MySQLdb) 
+
+
+Default user/password: admin
 
  
 Installation (with Python already installed):
@@ -50,7 +53,7 @@ Installation (with Python already installed):
 - Change into root directory of source code:
   $ cd onlinestore-multi
 
-- Create new MySQL database, restore from dump file, set admin password:
+- Create new MySQL database and restore from dump file:
   $ mysql -u root -p
   mysql> create database onlinestore;
   mysql> grant all privileges on onlinestore.* to onlinestore@localhost identified by 'onlinestore_password';
@@ -58,9 +61,6 @@ Installation (with Python already installed):
   mysql> quit;
 
   $ mysql -D onlinestore -u onlinestore -p < ./db.sql 
-
-  $ mysql -D onlinestore -u onlinestore -p
-  mysql> update ms_user set password=md5('admin123') where id=1;
 
 - In root directory of source code:
   $ cp config.ini.dist config.ini

@@ -18,6 +18,7 @@ import decimal
 import urlparse
 import random
 import cStringIO
+import locale
 #
 try: 
    from hashlib import md5
@@ -32,9 +33,6 @@ import GeoIP
 import web
 import yaml
 from BeautifulSoup import BeautifulSoup
-from nop_number import number_format 
-from nop_email import is_valid_email
-from nop_browser import detect_ua
 import app_messages as m
 import app_global_conf as gc
 reload(m)
@@ -70,7 +68,7 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.3'
+VERSION = '0.4'
 NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False
@@ -221,6 +219,91 @@ rendertime = [0, 0]
     
 
 ############################### FUNCTION ###############################
+
+def is_valid_email(email):
+    tld = [
+    'biz', 
+    'com',
+    'info',
+    'name',
+    'net',
+    'org',
+    'pro',
+    'aero',
+    'asia',
+    'cat',
+    'coop',
+    'edu',
+    'gov',
+    'int',
+    'jobs',
+    'mil',
+    'mobi',
+    'museum',
+    'tel',
+    'travel',
+    ]
+
+    user_allowed = '-_.%+'
+    host_allowed = '-_.'
+
+    #too short
+    if len(email) < 6:
+        return False
+    #
+    
+    #split by @
+    try:
+        user, domain = email.rsplit('@', 1)
+        host, tl = domain.rsplit('.', 1)
+    except:
+        return False
+    #
+    
+    #check for country code and toplevel
+    if len(tl) != 2 and tl not in tld:
+        return False
+    #
+
+    #remove char in user allowed
+    for i in user_allowed:
+        user = user.replace(i, '')
+    #
+    #remove char in host allowed
+    for i in host_allowed:
+        host = host.replace(i, '')
+    #
+
+    #should contain only alpha numeric
+    if user.isalnum() and host.isalnum():
+        return True
+    else:
+        return False
+
+
+def detect_ua(ua):
+    ret = {}
+    ret['mobile_document'] = ua
+    return ret
+
+
+def number_format(number, localeset='', places=0):
+    localeset = str(localeset)
+    saved = locale.getlocale(locale.LC_NUMERIC)
+    try:
+        locale.setlocale(locale.LC_NUMERIC, localeset)
+    except:
+        try:
+            localeset = localeset + '.utf8' #quick+dirty, will be fixed later
+            locale.setlocale(locale.LC_NUMBERIC, localeset)
+        except:
+            pass
+    if locale:
+        ret = locale.format('%.*f', (places, number), True)
+        locale.setlocale(locale.LC_NUMERIC, saved)
+        return ret
+    return number
+    
 
 def now(format='%Y-%m-%d %H:%M:%S'):
     return time.strftime(format)
