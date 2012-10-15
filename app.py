@@ -68,14 +68,14 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.6'
+VERSION = '0.7'
 NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False
 PS = os.path.sep 
 CURDIR = os.path.dirname(__file__)
-DOMAIN = cget('account', 'domain', default='unknown')
 CONFIG_FILE_DEFAULT = 'config.ini'
+DOMAIN = cget('account', 'domain', default='unknown')
 BASEURL_DEFAULT = '/store' 
 HOME_DEFAULT = '/product'
 TEMPLATE_DEFAULT = 'default'
