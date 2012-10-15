@@ -1,7 +1,8 @@
-#all account level will be enterprise in the future
-#please do not change the value
-#just ignore this section
+#Account
+#level: deprecated, leave it 'enterprise' for now
+#domain: domain name without http/https
 [account] 
+domain = 
 level = enterprise
 
 #MySQL database connection parameter

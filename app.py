@@ -68,13 +68,13 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.5'
+VERSION = '0.6'
 NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False
 PS = os.path.sep 
 CURDIR = os.path.dirname(__file__)
-DOMAIN = web.ctx.env.get('host', 'unknown')
+DOMAIN = cget('account', 'domain', default='unknown')
 CONFIG_FILE_DEFAULT = 'config.ini'
 BASEURL_DEFAULT = '/store' 
 HOME_DEFAULT = '/product'
