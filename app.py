@@ -67,7 +67,7 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.9'
+VERSION = '0.10'
 NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False
@@ -3899,7 +3899,7 @@ class admin_doc:
             raise web.seeother('/admin')
         else:
             disposition = 'attachment; filename=' + os.path.basename(f)
-            web.header('Content-Type', 'application/pdf')
+            web.header('Content-Type', 'text/plain')
             web.header('Content-Length', os.path.getsize(f))
             web.header('Content-Disposition', disposition)
             return open(f).read()

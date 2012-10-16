@@ -23,6 +23,7 @@ Features:
 - Custom Membership Level  
 - Send Email (Cart Checkout)
 - Captcha (Random Font)
+- Custom Logo 
 - More
 
 
