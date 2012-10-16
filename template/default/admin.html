@@ -11,29 +11,12 @@ $else:
     <h3>$msg['title_admin'].capitalize()</h3>
     <br>
 
-    $if data['level']:
-        $ found = 0
-        $ lvl = []
-        $for i in data['levels']:
-            $if i.lower() == data['level'].lower():
-                $ x = '<b>' + i.capitalize() + '</b>'
-                $ found = 1
-            $else:
-                $ x = i.capitalize()
-            $ lvl.append(x)
-        $if found == 0:
-            $ lvl[0] = '<b>' + lvl[0] + '</b>'
-        $ lvl2 = '&nbsp;&rarr;&nbsp;'.join(lvl)
-        <table class='admin'>
-        <tr>
-        <!--<td width='15%'><b>$msg['header_member_level'].capitalize()</b></td><td>$data['level'].capitalize()</td>-->
-        <td width='15%'><b>$msg['header_member_level'].capitalize()</b></td><td>$:lvl2</td>
-        </tr>
-        <tr>
-        <td width='15%'><b>$msg['header_app_version'].capitalize()</b></td><td>$data['version']</td>
-        </tr>
-        </table>
-        <br>
+    <table class='admin'>
+    <tr>
+    <td width='15%'><b>$msg['header_app_version'].capitalize()</b></td><td>$data['version']</td>
+    </tr>
+    </table>
+    <br>
 
     <table class='admin'>
     $ datam = data['menu']

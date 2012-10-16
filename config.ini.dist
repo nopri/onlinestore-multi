@@ -1,9 +1,15 @@
 #Account
-#level: deprecated, leave it 'enterprise' for now
 #domain: domain name without http/https
 [account] 
 domain = 
-level = enterprise
+value = 200
+cart = True
+user_content = True
+blog = True
+max_product_category = 100
+max_product = 500
+max_file_size = 512000
+max_files = 500
 
 #MySQL database connection parameter
 #please replace the defaults with your configuration

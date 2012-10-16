@@ -33,8 +33,7 @@ import GeoIP
 import web
 import yaml
 from BeautifulSoup import BeautifulSoup
-import app_messages as m
-import app_global_conf as gc
+import messages as m
 reload(m)
 
 
@@ -68,14 +67,14 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.7'
+VERSION = '0.8'
 NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False
 PS = os.path.sep 
 CURDIR = os.path.dirname(__file__)
 CONFIG_FILE_DEFAULT = 'config.ini'
-DOMAIN = cget('account', 'domain', default='unknown')
+DOMAIN = cget('account', 'domain')
 BASEURL_DEFAULT = '/store' 
 HOME_DEFAULT = '/product'
 TEMPLATE_DEFAULT = 'default'
@@ -209,9 +208,33 @@ menu = ''
 
 mobile = ''
 
-
-res = gc.res(cget('account','level'))
-
+#new res hack, eliminate app_global_conf.py
+#as of 16-October-2012
+res = {
+        'value'                            : 200,
+        'cart'                              : True,
+        'user_content'                : True,
+        'blog'                              : True,        
+        'max_product_category'  : 100,
+        'max_product'                  : 500,
+        'max_file_size'              : 600 * 1024,
+        'max_files'                     : 600,
+}
+for _rk in res.keys():
+    _rt = cget('account', _rk).lower()
+    _rtv = ''
+    if _rt == 'true':
+        _rtv = True
+    elif _rt == 'false':
+        _rtv = False
+    else:
+        try:
+            _rtv = int(_rt)
+        except:
+            pass
+    if type(_rtv) in [type(True), type(0)]: res[_rk] = _rtv
+#
+#
 
 rendertime = [0, 0]
 
@@ -2675,22 +2698,11 @@ class admin:
         data = {}
         data['menu'] = dadmin()
         #
-        lval = [gc.LEVEL[x]['value'] for x in gc.LEVEL.keys() if x.lower()!='default']
-        lval.sort()
-        aval = []
-        for i in lval:
-            for j in gc.LEVEL.keys():
-                if gc.LEVEL[j]['value'] == i:
-                    aval.append(j)
         #
         if isadmin():
             data['version'] = VERSION
-            data['level'] = cget('account', 'level')
-            data['levels'] = aval
         else:
             data['version'] = ''
-            data['level'] = ''
-            data['levels'] = ''
         #
         o = t.admin(title(ttl), data)
         o = tplb(o)
