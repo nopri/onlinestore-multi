@@ -67,12 +67,14 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.8'
+VERSION = '0.9'
 NAME = 'Online Store'
 PRECISION = 2
 FORCE_PROMOTE = False
 PS = os.path.sep 
 CURDIR = os.path.dirname(__file__)
+TEMPLATE_DIR = CURDIR + PS + 'template'
+DOC_ADMIN = CURDIR + PS + 'README.txt'
 CONFIG_FILE_DEFAULT = 'config.ini'
 DOMAIN = cget('account', 'domain')
 BASEURL_DEFAULT = '/store' 
@@ -490,7 +492,7 @@ def pget(option, default='', strip=True, callback=None):
 
 def tget(page, globals={}):
     p = page + '.html'
-    tdir = cget('template', 'dir')
+    tdir = TEMPLATE_DIR
     tdd = tdir + PS + TEMPLATE_DEFAULT
     tdc = tdd + PS + p
     tud = tdir + PS + pget('template', default=TEMPLATE_DEFAULT)
@@ -1350,7 +1352,7 @@ def dcur(id=0, field='*', pget_helper=''):
 
 def atpl():
     ret = []
-    tdir = cget('template', 'dir')
+    tdir = TEMPLATE_DIR
     files = os.listdir(tdir)
     for i in files:
         info = tinfo(i)
@@ -1816,7 +1818,7 @@ def dstat(date_from='', date_to=''):
 def tinfo(template, separator=','):
     ret = {}
     #
-    tdir = cget('template', 'dir')
+    tdir = TEMPLATE_DIR
     info = tdir + PS + template + PS + 'info'
     #
     t = ConfigParser.ConfigParser()
@@ -3892,7 +3894,7 @@ class admin_stat:
 
 class admin_doc:
     def GET(self):
-        f = cget('doc', 'admin')
+        f = DOC_ADMIN
         if not f or not os.path.exists(f):
             raise web.seeother('/admin')
         else:

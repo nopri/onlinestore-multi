@@ -2,7 +2,6 @@
 #domain: domain name without http/https
 [account] 
 domain = 
-value = 200
 cart = True
 user_content = True
 blog = True
@@ -22,34 +21,24 @@ name = onlinestore
 #SMTP setting, for sending email
 #smtp: host
 #user: smtp user
-#default: send as this user (shows in email) 
+#default: send as this user (for example: info@domain.tld)
 [mail]
 smtp = 
 user = 
 pass =  
-default = info@
-webmail = 
+default = 
 
 #Session
 #dir: session directory
 [session]
 dir = /tmp/onlinestore-multi-session/
 
-#Template
-#dir: template directory, please replace /path/to
-[template]
-dir = /path/to/onlinestore-multi/template/
-
-#URL 
+#URL
+#base: base URL 
 [url]
 base = /
 
 #Font
-#dir: font directory, containing TTF font file(s)
+#dir: directory contains TTF font file(s), or default font will be used
 [font]
 dir = /usr/share/fonts/truetype/freefont/
-
-#doc
-#admin: admin documentation
-[doc]
-admin = /path/to/onlinestore-multi/README.txt
