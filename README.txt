@@ -24,6 +24,7 @@ Features:
 - Send Email (Cart Checkout)
 - Captcha (Random Font)
 - Custom Logo 
+- Custom URL Redirect
 - More
 
 
