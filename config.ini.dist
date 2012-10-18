@@ -1,8 +1,11 @@
 #Account
 #domain: domain name without http/https
+#payments: comma separated/ended (1: cash, 2: cod, 3: bank/wire transfer)
 [account] 
 domain = 
+promote = True
 cart = True
+payments = 1,2,3,
 user_content = True
 blog = True
 max_product_category = 100

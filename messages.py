@@ -28,7 +28,7 @@ BANK_PAYMENT_METHOD = {
 
 MSG = {
     'default': {
-        'promo_host_default'    : 'Powered by Amerta Online Store Portal',
+        'promo_host_default'    : 'Powered by <a href="https://github.com/nopri/onlinestore-multi">onlinestore-multi</a>',
         'host_default'          : 'my store',
         'cmd_version_desktop'   : 'full version',
         'cmd_version_mobile'    : 'mobile version',
@@ -457,7 +457,7 @@ MSG = {
     },
     
     'id_ID' : {
-        'promo_host_default'    : 'Menggunakan Amerta Online Store Portal',
+        'promo_host_default'    : 'Menggunakan <a href="https://github.com/nopri/onlinestore-multi">onlinestore-multi</a>',
         'host_default'          : 'toko online',
         'cmd_version_desktop'   : 'versi full',
         'cmd_version_mobile'    : 'versi mobile',

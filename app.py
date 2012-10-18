@@ -67,10 +67,9 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.10'
-NAME = 'Online Store'
+VERSION = '0.11'
+NAME = 'onlinestore-multi'
 PRECISION = 2
-FORCE_PROMOTE = False
 PS = os.path.sep 
 CURDIR = os.path.dirname(__file__)
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -82,7 +81,6 @@ HOME_DEFAULT = '/product'
 TEMPLATE_DEFAULT = 'default'
 LANG_DEFAULT = 'en_US'
 MAIL_DEFAULT = '%s <%s>' %(DOMAIN, cget('mail', 'default'))
-PAYMENT_TYPE = [1,2,3] 
 FORCE_SINGLE_CURRENCY = True
 CWIDTH = {'product': 42, 'qty': 8, 'price': 17, 'vat': 16, 'subtotal': 18}
 CSPACE = '  '
@@ -213,6 +211,8 @@ mobile = ''
 #new res hack, eliminate app_global_conf.py
 #as of 16-October-2012
 res = {
+        'promote'                         : True,
+        'payments'                       : [1,2,3],
         'value'                            : 200,
         'cart'                              : True,
         'user_content'                : True,
@@ -233,14 +233,25 @@ for _rk in res.keys():
         try:
             _rtv = int(_rt)
         except:
-            pass
-    if type(_rtv) in [type(True), type(0)]: res[_rk] = _rtv
+            if type(_rt) == type(''):
+                if _rt.find(',') > 0:
+                    try:
+                        _rtv = [x for x in _rt.split(',')]
+                        _rtv.remove('')
+                        _rtv = [int(x) for x in _rtv]
+                    except:
+                        _rtv = res['payments']
+    #
+    if type(_rtv) in [type(True), type(0), type([])]: res[_rk] = _rtv
 #
 #
 
 rendertime = [0, 0]
 
-    
+
+#quick hack as of 18-October-2012
+FORCE_PROMOTE = res['promote']
+PAYMENT_TYPE = res['payments']
 
 ############################### FUNCTION ###############################
 
