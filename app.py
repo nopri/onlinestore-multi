@@ -9,7 +9,11 @@
 
 
 import os
+CURDIR = os.path.dirname(__file__)
+
 import sys
+sys.path.append(CURDIR)
+
 import re
 import ConfigParser
 import time
@@ -67,11 +71,10 @@ def cget(section, option, default='', strip=True):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.11'
+VERSION = '0.12'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 PS = os.path.sep 
-CURDIR = os.path.dirname(__file__)
 TEMPLATE_DIR = CURDIR + PS + 'template'
 DOC_ADMIN = CURDIR + PS + 'README.txt'
 CONFIG_FILE_DEFAULT = 'config.ini'
@@ -182,8 +185,8 @@ else:
 del conn
 
 
-sess = web.session.Session(wapp, web.session.DiskStore(
-    cget('session','dir')), 
+sess = web.session.Session(wapp, web.session.DBStore(
+    db, 'sessions'), 
     initializer={
         'captcha': '',
         'p' : {},

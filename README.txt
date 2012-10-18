@@ -19,9 +19,8 @@ Features:
 - User Contents (+Menu)
 - Shopping Cart
 - Simple Invoice Management
-- Simple Statistics
-- Custom Membership Level  
-- Send Email (Cart Checkout)
+- Simple Statistics  
+- Send Email (Cart Checkout, Contact, etc)
 - Captcha (Random Font)
 - Custom Logo 
 - Custom URL Redirect
@@ -71,11 +70,6 @@ Installation (with Python already installed):
 
 - Edit config.ini
 
-- If you are using /tmp/onlinestore-multi-session as session directory, 
-  please make sure it is writeable by user who is running web server
-  Ubuntu-based distribution:
-  $ sudo chown www-data -R /tmp/onlinestore-multi-session
-
 - Configure WSGI
   Ubuntu-based distribution:
   $ sudo apt-get install libapache2-mod-wsgi
@@ -84,9 +78,6 @@ Installation (with Python already installed):
   (replace /tmp/onlinestore-multi with your configuration):
 
   $ sudo nano /etc/apache2/sites-available/default
-  (put this line before VirtualHost definition)
-  WSGIPythonPath /tmp/onlinestore-multi/
-
   (put these lines below DocumentRoot)
 
   WSGIScriptAlias / /tmp/onlinestore-multi/app.py/

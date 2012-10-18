@@ -21,7 +21,7 @@ user = onlinestore
 pass = 
 name = onlinestore 
 
-#SMTP setting, for sending email
+#Mail/SMTP setting, for sending email
 #smtp: host
 #user: smtp user
 #default: send as this user (for example: info@domain.tld)
@@ -30,11 +30,6 @@ smtp =
 user = 
 pass =  
 default = 
-
-#Session
-#dir: session directory
-[session]
-dir = /tmp/onlinestore-multi-session/
 
 #URL
 #base: base URL 

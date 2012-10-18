@@ -15,6 +15,21 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+--
+-- Table structure for table `sessions`
+-- manually added on 19-October-2012 nop@tedut.com
+-- really sorry for changes in db structure :(
+--
+
+DROP TABLE IF EXISTS `sessions`;
+CREATE TABLE `sessions` (
+  `session_id` char(128) UNIQUE NOT NULL,
+  `atime` timestamp NOT NULL default current_timestamp,
+  `data` text,
+  PRIMARY KEY  (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Table structure for table `ms_bank`
 --
