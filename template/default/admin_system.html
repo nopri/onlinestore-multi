@@ -237,7 +237,150 @@ $else:
     </select>
     </td>
     </tr>
-        
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_domain'].capitalize()
+    $:dkget(msg, 'desc_sys_domain', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='domain' size='4' value="$data['domain']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_promote'].capitalize()
+    $:dkget(msg, 'desc_sys_promote', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='promote' size='4' value="$data['promote']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_payments'].capitalize()
+    $:dkget(msg, 'desc_sys_payments', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='payments' size='4' value="$data['payments']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_max_product_category'].capitalize()
+    $:dkget(msg, 'desc_sys_max_product_category', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='max_product_category' size='4' value="$data['max_product_category']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_max_product'].capitalize()
+    $:dkget(msg, 'desc_sys_max_product', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='max_product' size='4' value="$data['max_product']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_max_file_size'].capitalize()
+    $:dkget(msg, 'desc_sys_max_file_size', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='max_file_size' size='4' value="$data['max_file_size']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_max_files'].capitalize()
+    $:dkget(msg, 'desc_sys_max_files', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='max_files' size='4' value="$data['max_files']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_mail_smtp'].capitalize()
+    $:dkget(msg, 'desc_sys_mail_smtp', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='mail_smtp' size='4' value="$data['mail_smtp']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_mail_user'].capitalize()
+    $:dkget(msg, 'desc_sys_mail_user', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='mail_user' size='4' value="$data['mail_user']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_mail_pass'].capitalize()
+    $:dkget(msg, 'desc_sys_mail_pass', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='mail_pass' size='4' value="$data['mail_pass']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_mail_default'].capitalize()
+    $:dkget(msg, 'desc_sys_mail_default', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='mail_default' size='4' value="$data['mail_default']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_url_base'].capitalize()
+    $:dkget(msg, 'desc_sys_url_base', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='url_base' size='4' value="$data['url_base']">
+    </td>
+    </tr>
+
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_font_dir'].capitalize()
+    $:dkget(msg, 'desc_sys_font_dir', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    $:dkget(msg, 'desc_sys_needs_restart', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')</span>
+    </td>
+    <td>
+    <input type='text' name='font_dir' size='4' value="$data['font_dir']">
+    </td>
+    </tr>
+
 
     <tr>
     <td colspan='2' align='right'>

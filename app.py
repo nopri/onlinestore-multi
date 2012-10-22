@@ -10,6 +10,8 @@
 
 import os
 CURDIR = os.path.dirname(__file__)
+PS = os.path.sep 
+CONFIG_FILE_DEFAULT = 'config.ini'
 
 import sys
 sys.path.append(CURDIR)
@@ -50,45 +52,8 @@ web.config.session_parameters['ignore_expiry'] = True
 web.config.session_parameters['timeout'] = 1800 #30 minute
 
 
-########################### IMPORTANT FUNCTION #########################
+############################## URLS / WEB APP ############################
 
-
-def cget(section, option, default='', strip=True):
-    c = ConfigParser.ConfigParser()
-    c.read(CURDIR + PS + CONFIG_FILE_DEFAULT)
-    try:
-        ret = c.get(section, option)
-    except:
-        ret = default
-    del c
-    #
-    if strip and hasattr(ret, 'strip'):
-        ret = ret.strip()
-    #
-    return ret
-
-
-############################### CONSTANT ###############################
-
-
-VERSION = '0.12'
-NAME = 'onlinestore-multi'
-PRECISION = 2
-PS = os.path.sep 
-TEMPLATE_DIR = CURDIR + PS + 'template'
-DOC_ADMIN = CURDIR + PS + 'README.txt'
-CONFIG_FILE_DEFAULT = 'config.ini'
-DOMAIN = cget('account', 'domain')
-BASEURL_DEFAULT = '/store' 
-HOME_DEFAULT = '/product'
-TEMPLATE_DEFAULT = 'default'
-LANG_DEFAULT = 'en_US'
-MAIL_DEFAULT = '%s <%s>' %(DOMAIN, cget('mail', 'default'))
-FORCE_SINGLE_CURRENCY = True
-CWIDTH = {'product': 42, 'qty': 8, 'price': 17, 'vat': 16, 'subtotal': 18}
-CSPACE = '  '
-CART_ADD_MAX = 10
-ADMIN_URL_GROUP = ('/profile', '/passwd', '/promote')
 
 URLS = (
     '/', 'index',
@@ -166,15 +131,29 @@ URLS = (
     '/(.*)', 'redir',
     )
 
-
-################################ GLOBAL ################################
-
-
 wapp = web.application(URLS, globals())
 
 
+############################## DATABASE ############################
+
+
+def cget(section, option, default='', strip=True):
+    c = ConfigParser.ConfigParser()
+    c.read(CURDIR + PS + CONFIG_FILE_DEFAULT)
+    try:
+        ret = c.get(section, option)
+    except:
+        ret = default
+    del c
+    #
+    if strip and hasattr(ret, 'strip'):
+        ret = ret.strip()
+    #
+    return ret
+
+
 try:
-    conn = web.database(dbn = 'mysql', db = cget('db', 'name'),
+    conn = web.database(dbn = cget('db', 'type'), db = cget('db', 'name'),
         user = cget('db', 'user'), pw = cget('db', 'pass'))
 except:
     conn = None
@@ -183,6 +162,81 @@ if conn and hasattr(conn, 'query'):
 else:
     db = None
 del conn
+
+
+########################### IMPORTANT FUNCTION #########################
+
+
+def query(q, a = {}):
+    global db
+    #
+    r = db.query(q, vars = a)
+    try:
+        ret = list(r)
+    except:
+        ret = r
+    #
+    return ret
+
+
+def rget(r, key, count=1, index=0, default='', to_yaml=False):
+    try:
+        test = r and len(r) >= count and r[index].has_key(key)
+    except:
+        test = False
+    #
+    if test and r[index].get(key):
+        ret = r[index].get(key)
+    else:
+        ret = default   
+    #
+    if to_yaml:
+        try:
+            ret2 = yaml.load(ret)
+        except:
+            ret2 = ret
+    else:
+        ret2 = ret
+    #
+    return ret2
+    
+
+def pget(option, default='', strip=True, callback=None):
+    q = 'select value from ms_config where param=$p'
+    a = {'p': option}
+    r = query(q, a)
+    ret = rget(r, 'value', default=default)
+    #
+    if strip and hasattr(ret, 'strip'):
+        ret = ret.strip()
+    #
+    if callback:
+        ret = callback(id=ret, pget_helper=True)
+    #
+    return ret
+
+############################### CONSTANT ###############################
+
+
+VERSION = '0.91'
+NAME = 'onlinestore-multi'
+PRECISION = 2
+TEMPLATE_DIR = CURDIR + PS + 'template'
+DOC_ADMIN = CURDIR + PS + 'README.txt'
+DOMAIN = pget('domain')
+BASEURL_DEFAULT = '/store' 
+HOME_DEFAULT = '/product'
+TEMPLATE_DEFAULT = 'default'
+LANG_DEFAULT = 'en_US'
+MAIL_DEFAULT = '%s <%s>' %(DOMAIN, pget('mail_default'))
+FORCE_SINGLE_CURRENCY = True
+CWIDTH = {'product': 42, 'qty': 8, 'price': 17, 'vat': 16, 'subtotal': 18}
+CSPACE = '  '
+CART_ADD_MAX = 10
+ADMIN_URL_GROUP = ('/profile', '/passwd', '/promote')
+
+
+################################ GLOBAL ################################
 
 
 sess = web.session.Session(wapp, web.session.DBStore(
@@ -213,37 +267,42 @@ mobile = ''
 
 #new res hack, eliminate app_global_conf.py
 #as of 16-October-2012
+#quick hack, once again, put config in database
+#as of 22-October-2012
+res_fix = ['cart', 'user_content', 'blog']
 res = {
-        'promote'                         : True,
-        'payments'                       : [1,2,3],
-        'value'                            : 200,
         'cart'                              : True,
         'user_content'                : True,
         'blog'                              : True,        
+        'promote'                         : True,
+        'payments'                       : [1,2,3],
+        'value'                            : 200,
         'max_product_category'  : 100,
         'max_product'                  : 500,
         'max_file_size'              : 600 * 1024,
         'max_files'                     : 600,
 }
 for _rk in res.keys():
-    _rt = cget('account', _rk).lower()
+    if _rk in res_fix: continue
+    _rt = pget(_rk).lower()
     _rtv = ''
-    if _rt == 'true':
-        _rtv = True
-    elif _rt == 'false':
+    if _rk == 'promote':
         _rtv = False
+        if _rt == '1':
+            _rtv = True
+    elif _rk == 'payments':
+        if _rt.find(',') > 0:
+            try:
+                _rtv = [x for x in _rt.split(',')]
+                _rtv.remove('')
+                _rtv = [int(x) for x in _rtv]
+            except:
+                _rtv = res['payments']        
     else:
         try:
             _rtv = int(_rt)
         except:
-            if type(_rt) == type(''):
-                if _rt.find(',') > 0:
-                    try:
-                        _rtv = [x for x in _rt.split(',')]
-                        _rtv.remove('')
-                        _rtv = [int(x) for x in _rtv]
-                    except:
-                        _rtv = res['payments']
+            pass
     #
     if type(_rtv) in [type(True), type(0), type([])]: res[_rk] = _rtv
 #
@@ -386,9 +445,9 @@ def sendmail(to, subject, message, reply_to=MAIL_DEFAULT):
     XM = UA
     #
     try:
-        web.config.smtp_server = cget('mail', 'smtp')
-        web.config.smtp_username = cget('mail', 'user')
-        web.config.smtp_password = cget('mail', 'pass')
+        web.config.smtp_server = pget('mail_smtp')
+        web.config.smtp_username = pget('mail_user')
+        web.config.smtp_password = pget('mail_pass')
         #
         web.sendmail(MAIL_DEFAULT, to, subject, message,
             headers=({'User-Agent': UA, 'X-Mailer': XM, 'Reply-To': reply_to})
@@ -447,60 +506,11 @@ def mlget(field, default=m.COUNTRY['default'][0], all=False, get_non_empty=True)
 
 
 def ub(url):
-    base = cget('url', 'base', BASEURL_DEFAULT)
+    base = pget('url_base', default=BASEURL_DEFAULT)
     if base == '/':
         ret = url
     else:
         ret = base + url
-    return ret
-
-
-def query(q, a = {}):
-    global db
-    #
-    r = db.query(q, vars = a)
-    try:
-        ret = list(r)
-    except:
-        ret = r
-    #
-    return ret
-
-
-def rget(r, key, count=1, index=0, default='', to_yaml=False):
-    try:
-        test = r and len(r) >= count and r[index].has_key(key)
-    except:
-        test = False
-    #
-    if test and r[index].get(key):
-        ret = r[index].get(key)
-    else:
-        ret = default   
-    #
-    if to_yaml:
-        try:
-            ret2 = yaml.load(ret)
-        except:
-            ret2 = ret
-    else:
-        ret2 = ret
-    #
-    return ret2
-    
-
-def pget(option, default='', strip=True, callback=None):
-    q = 'select value from ms_config where param=$p'
-    a = {'p': option}
-    r = query(q, a)
-    ret = rget(r, 'value', default=default)
-    #
-    if strip and hasattr(ret, 'strip'):
-        ret = ret.strip()
-    #
-    if callback:
-        ret = callback(id=ret, pget_helper=True)
-    #
     return ret
 
 
@@ -1420,7 +1430,7 @@ def captcha_gen_image(word, font_file='', font_size=20, format='JPEG', fg=-1, bg
     if bg == -1:
         bg = fg ^ 0xffffff
     #
-    font_dir = cget('font', 'dir') 
+    font_dir = pget('font_dir') 
     if not font_file:
         try:
             font_file = random.choice(os.listdir(font_dir))
@@ -2911,7 +2921,20 @@ class admin_system:
         data['all_files'] = dfs(filter=['image','flash'])
         data['keywords'] = pget('site_keywords', default='')
         data['news_max'] = pget('news_max')
-        data['message'] = smget()        
+        data['message'] = smget() 
+        data['domain'] = pget('domain')
+        data['promote'] = pget('promote')
+        data['max_product_category'] = pget('max_product_category')
+        data['max_product'] = pget('max_product')
+        data['max_file_size'] = pget('max_file_size')
+        data['max_files'] = pget('max_files')
+        data['mail_smtp'] = pget('mail_smtp')
+        data['mail_user'] = pget('mail_user')
+        data['mail_pass'] = pget('mail_pass')
+        data['mail_default'] = pget('mail_default')
+        data['url_base'] = pget('url_base')
+        data['font_dir'] = pget('font_dir')
+        data['payments'] = pget('payments')
         #
         o = t.admin_system(title(ttl), data)
         o = tplb(o)
@@ -2930,6 +2953,19 @@ class admin_system:
                 logo_file='',
                 keywords='',
                 news_max='',
+                domain='',
+                promote='',
+                payments='',
+                max_product_category='',
+                max_product='',
+                max_file_size='',
+                max_files='',
+                mail_smtp='',
+                mail_user='',
+                mail_pass='',
+                mail_default='',
+                url_base='',
+                font_dir='',
             )
         #
         site_desc = mlset(i, 'site_desc')
@@ -2943,6 +2979,19 @@ class admin_system:
         logo_file = i.logo_file
         keywords = i.keywords
         news_max = i.news_max
+        domain= i.domain
+        promote= i.promote
+        payments= i.payments
+        max_product_category= i.max_product_category
+        max_product= i.max_product
+        max_file_size= i.max_file_size
+        max_files= i.max_files
+        mail_smtp= i.mail_smtp
+        mail_user= i.mail_user
+        mail_pass= i.mail_pass
+        mail_default= i.mail_default
+        url_base= i.url_base
+        font_dir= i.font_dir
         #
         tpinfo = tinfo(template)
         if not tpinfo:
@@ -2967,6 +3016,19 @@ class admin_system:
             'logo_file'         : logo_file,
             'site_keywords'     : keywords,
             'news_max'          : news_max,
+            'domain'  : domain,
+            'promote'  : promote,
+            'payments'  : payments,
+            'max_product_category'  : max_product_category,
+            'max_product'  : max_product,
+            'max_file_size'  : max_file_size,
+            'max_files'  : max_files,
+            'mail_smtp'  : mail_smtp,
+            'mail_user'  : mail_user,
+            'mail_pass'  : mail_pass,
+            'mail_default'  : mail_default,
+            'url_base'  : url_base,
+            'font_dir'  : font_dir,
         }
         for i in config.keys():
             r = db.update('ms_config', value=config[i], where='param=$param', log_id=sess.log, vars={'param': i})

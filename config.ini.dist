@@ -1,42 +1,7 @@
-#Account
-#domain: domain name without http/https
-#payments: comma separated/ended (1: cash, 2: cod, 3: bank/wire transfer)
-[account] 
-domain = 
-promote = True
-cart = True
-payments = 1,2,3,
-user_content = True
-blog = True
-max_product_category = 100
-max_product = 500
-max_file_size = 512000
-max_files = 500
-
-#MySQL database connection parameter
-#please replace the defaults with your configuration
+#Database connection
 [db]
+type = mysql
 host = localhost
 user = onlinestore
 pass = 
 name = onlinestore 
-
-#Mail/SMTP setting, for sending email
-#smtp: host
-#user: smtp user
-#default: send as this user (for example: info@domain.tld)
-[mail]
-smtp = 
-user = 
-pass =  
-default = 
-
-#URL
-#base: base URL 
-[url]
-base = /
-
-#Font
-#dir: directory contains TTF font file(s), or default font will be used
-[font]
-dir = /usr/share/fonts/truetype/freefont/
