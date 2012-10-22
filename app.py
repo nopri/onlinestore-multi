@@ -215,10 +215,11 @@ def pget(option, default='', strip=True, callback=None):
     #
     return ret
 
+
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.91'
+VERSION = '0.92'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -282,38 +283,13 @@ res = {
         'max_file_size'              : 600 * 1024,
         'max_files'                     : 600,
 }
-for _rk in res.keys():
-    if _rk in res_fix: continue
-    _rt = pget(_rk).lower()
-    _rtv = ''
-    if _rk == 'promote':
-        _rtv = False
-        if _rt == '1':
-            _rtv = True
-    elif _rk == 'payments':
-        if _rt.find(',') > 0:
-            try:
-                _rtv = [x for x in _rt.split(',')]
-                _rtv.remove('')
-                _rtv = [int(x) for x in _rtv]
-            except:
-                _rtv = res['payments']        
-    else:
-        try:
-            _rtv = int(_rt)
-        except:
-            pass
-    #
-    if type(_rtv) in [type(True), type(0), type([])]: res[_rk] = _rtv
-#
-#
-
-rendertime = [0, 0]
-
 
 #quick hack as of 18-October-2012
 FORCE_PROMOTE = res['promote']
 PAYMENT_TYPE = res['payments']
+
+rendertime = [0, 0]
+
 
 ############################### FUNCTION ###############################
 
@@ -2172,7 +2148,43 @@ def proc_set_fullpath(handle):
     return handle()
 
 
+def proc_set_res(handle):
+    global res
+    global FORCE_PROMOTE
+    global PAYMENT_TYPE
+    #
+    for _rk in res.keys():
+        if _rk in res_fix: continue
+        _rt = pget(_rk).lower()
+        _rtv = ''
+        if _rk == 'promote':
+            _rtv = False
+            if _rt == '1':
+                _rtv = True
+        elif _rk == 'payments':
+            if _rt.find(',') > 0:
+                try:
+                    _rtv = [x for x in _rt.split(',')]
+                    _rtv.remove('')
+                    _rtv = [int(x) for x in _rtv]
+                except:
+                    _rtv = res['payments']        
+        else:
+            try:
+                _rtv = int(_rt)
+            except:
+                pass
+        #
+        if type(_rtv) in [type(True), type(0), type([])]: res[_rk] = _rtv
+    #
+    FORCE_PROMOTE = res['promote']
+    PAYMENT_TYPE = res['payments']
+    #
+    return handle()
+
+
 wapp.add_processor(proc_calc_render_start)
+wapp.add_processor(proc_set_res)
 wapp.add_processor(proc_detect_ua)
 wapp.add_processor(proc_set_lang)
 wapp.add_processor(proc_set_log)
