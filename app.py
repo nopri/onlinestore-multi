@@ -232,7 +232,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.93'
+VERSION = '0.94'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -2170,6 +2170,8 @@ def proc_set_res(handle):
     global res
     global FORCE_PROMOTE
     global PAYMENT_TYPE
+    global DOMAIN
+    global MAIL_DEFAULT
     #
     for _rk in res.keys():
         if _rk in res_fix: continue
@@ -2197,6 +2199,8 @@ def proc_set_res(handle):
     #
     FORCE_PROMOTE = res['promote']
     PAYMENT_TYPE = res['payments']
+    DOMAIN = pget('domain')
+    MAIL_DEFAULT = '%s <%s>' %(DOMAIN, pget('mail_default'))
     #
     return handle()
 
