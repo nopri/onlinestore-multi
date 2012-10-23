@@ -35,7 +35,20 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 from PIL import ImageFilter
-import GeoIP
+#
+fgeo = None
+try: 
+    import GeoIP
+    ogeo = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
+    fgeo = ogeo.country_name_by_addr
+except ImportError:
+    try:
+        import pygeoip
+        ogeo = pygeoip.GeoIP(CURDIR + PS + 'GeoIP.dat', pygeoip.MEMORY_CACHE)
+        fgeo = ogeo.country_name_by_addr
+    except:
+        fgeo = None
+#
 import web
 import yaml
 from BeautifulSoup import BeautifulSoup
@@ -219,7 +232,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.92'
+VERSION = '0.93'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -1943,9 +1956,11 @@ def proc_set_log(handle):
     met = web.ctx.method
     dt = now()
     #
-    gi = GeoIP.new(GeoIP.GEOIP_STANDARD)
-    country = gi.country_name_by_addr(ip)
-    del gi
+    country = None
+    if callable(fgeo):
+        country = fgeo(ip)
+        if not country: country = None
+    #
     insert_id = db.insert('tr_log', 
                 date_log=dt, date_log_last=dt, activity=1, ip=ip, 
                 country=country, referer=ref, url=url,
@@ -1971,9 +1986,12 @@ def proc_set_lang(handle):
         else:
             #auto
             ip = web.ctx.ip
-            gi = GeoIP.new(GeoIP.GEOIP_STANDARD)
-            country = gi.country_name_by_addr(ip)
-            del gi
+            #
+            country = None
+            if callable(fgeo):
+                country = fgeo(ip)
+                if not country: country = None
+            #
             #
             if m.COUNTRY.has_key(country):
                 lang = m.COUNTRY[country][0]            

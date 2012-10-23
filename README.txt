@@ -35,7 +35,7 @@ Using:
 - jQuery/jQueryUI (bundled, old version)
 - PyYAML
 - BeautifulSoup
-- GeoIP
+- GeoIP or pygeoip (auto detect)
 - Python Imaging Library
 - MySQL (and MySQLdb) 
 
@@ -46,7 +46,8 @@ Default user/password: admin
 Installation (with Python already installed):
 - We will use Apache HTTP Server for WSGI.
 
-- Install: web.py, PyYAML, BeautifulSoup, Python GeoIP, PIL, MySQL Server, Python MySQLdb
+- Install: web.py, PyYAML, BeautifulSoup, Python GeoIP (or pygeoip, noted below), 
+  PIL, MySQL Server, Python MySQLdb
   Ubuntu-based distribution (put command in one line):
   $ sudo apt-get install python-webpy python-yaml python-beautifulsoup python-geoip python-imaging mysql-server python-mysqldb
 
@@ -86,5 +87,9 @@ Installation (with Python already installed):
   
   $ sudo service apache2 reload
   
- 
+- If you are using pygeoip:
+  - Download http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
+  - Extract and put GeoIP.dat into application directory
+
+
 Thank you :)
