@@ -127,8 +127,8 @@ CREATE TABLE `ms_config` (
 LOCK TABLES `ms_config` WRITE;
 /*!40000 ALTER TABLE `ms_config` DISABLE KEYS */;
 INSERT INTO `ms_config` VALUES ('allow_user','',NULL),('another_email','',NULL),('blog_show_style','date',NULL),('cart_check_stock','',NULL),('currency','',NULL),('expose_error','1',NULL),('extra_info','',NULL),('general_error_message','',NULL),('homepage','',NULL),('invoice_extra_info','',NULL),('invoice_show_bank','',NULL),('invoice_show_paypal','',NULL),('lang','',NULL),('logo_file','',NULL),('news_max','5',NULL),('offline','1',NULL),('payment_month','12',NULL),('promo_host','',NULL),('secure','',NULL),('site_description','',NULL),('site_keywords','',NULL),('sticky_info','',NULL),('template','default',NULL),('template_param','',NULL),('use_cart','',NULL);
--- manually added on 22-October-2012 nop@tedut.com. Again, really sorry :(
-INSERT INTO `ms_config` VALUES ('domain','',NULL),('promote','1',NULL),('payments','1,2,3,',NULL),('max_product_category','100',NULL),('max_product','500',NULL),('max_file_size','512000',NULL),('max_files','500',NULL),('mail_smtp','',NULL),('mail_user','',NULL),('mail_pass','',NULL),('mail_default','',NULL),('url_base','/',NULL),('font_dir','/usr/share/fonts/truetype/freefont/',NULL);
+-- manually added on 22/24-October-2012 nop@tedut.com. Again, really sorry :(
+INSERT INTO `ms_config` VALUES ('expose_time','1',NULL),('promote','1',NULL),('payments','1,2,3,',NULL),('max_product_category','100',NULL),('max_product','500',NULL),('max_file_size','512000',NULL),('max_files','500',NULL),('mail_smtp','',NULL),('mail_user','',NULL),('mail_pass','',NULL),('mail_default','',NULL),('url_base','/',NULL),('font_dir','/usr/share/fonts/truetype/freefont/',NULL);
 /*!40000 ALTER TABLE `ms_config` ENABLE KEYS */;
 UNLOCK TABLES;
 

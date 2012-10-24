@@ -3,10 +3,11 @@ onlinestore-multi, Simple Online Store application
 2010
 GPL 
 
-Screenshots: https://github.com/nopri/onlinestore-multi/wiki
+
+SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
 
 
-Features:
+FEATURES:
 - Run as WSGI Application
 - Multi Language (currently English and Bahasa Indonesia)
 - Pretty URL
@@ -29,7 +30,7 @@ Features:
 - More
 
 
-Using:
+REQUIREMENTS:
 - Python
 - web.py
 - jQuery/jQueryUI (bundled, old version)
@@ -38,58 +39,44 @@ Using:
 - GeoIP or pygeoip (auto detect)
 - Python Imaging Library
 - MySQL (and MySQLdb) 
+- Apache HTTP Server (and mod_wsgi)
 
 
-Default user/password: admin
+DEFAULT USER/PASSWORD: admin
 
  
-Installation (with Python already installed):
-- We will use Apache HTTP Server for WSGI.
+INSTALLATION:
+1) Install all the requirements above (except for bundled)
 
-- Install: web.py, PyYAML, BeautifulSoup, Python GeoIP (or pygeoip, noted below), 
-  PIL, MySQL Server, Python MySQLdb
-  Ubuntu-based distribution (put command in one line):
-  $ sudo apt-get install python-webpy python-yaml python-beautifulsoup python-geoip python-imaging mysql-server python-mysqldb
+2) Download / clone onlinestore-multi: https://github.com/nopri/onlinestore-multi.git
 
-- Download onlinestore-multi source code, or clone from GitHub
-  $ git clone https://github.com/nopri/onlinestore-multi.git
+3) Change into application directory:  
+   $ cd onlinestore-multi
 
-- Change into root directory of source code:
-  $ cd onlinestore-multi
+4) Create new MySQL database and restore from dump file:
+   $ mysql -u root -p
+   mysql> create database onlinestore;
+   mysql> grant all privileges on onlinestore.* to onlinestore@localhost identified by 'onlinestore_password';
+   mysql> flush privileges;
+   mysql> quit;
 
-- Create new MySQL database and restore from dump file:
-  $ mysql -u root -p
-  mysql> create database onlinestore;
-  mysql> grant all privileges on onlinestore.* to onlinestore@localhost identified by 'onlinestore_password';
-  mysql> flush privileges;
-  mysql> quit;
+   $ mysql -D onlinestore -u onlinestore -p < ./db.sql 
 
-  $ mysql -D onlinestore -u onlinestore -p < ./db.sql 
+5) Copy config.ini.dist to config.ini, edit accordingly
 
-- In root directory of source code:
-  $ cp config.ini.dist config.ini
+6) Configure WSGI:
+   Ubuntu-based distribution: edit /etc/apache2/sites-available/default
+   (put these lines below DocumentRoot, adjust accordingly)
 
-- Edit config.ini
-
-- Configure WSGI
-  Ubuntu-based distribution:
-  $ sudo apt-get install libapache2-mod-wsgi
+        WSGIScriptAlias / /tmp/onlinestore-multi/app.py/
+        AddType text/html .py
+        Alias /static /tmp/onlinestore-multi/static/
   
-  For default domain 
-  (replace /tmp/onlinestore-multi with your configuration):
-
-  $ sudo nano /etc/apache2/sites-available/default
-  (put these lines below DocumentRoot)
-
-  WSGIScriptAlias / /tmp/onlinestore-multi/app.py/
-  AddType text/html .py
-  Alias /static /tmp/onlinestore-multi/static/
+7) Restart Apache HTTP Server
   
-  $ sudo service apache2 reload
-  
-- If you are using pygeoip:
-  - Download http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
-  - Extract and put GeoIP.dat into application directory
+8) If you are using pygeoip:
+   - Download http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
+   - Extract and put GeoIP.dat into root directory of source code
 
 
-Thank you :)
+THANK YOU :)

@@ -232,17 +232,17 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.94'
+VERSION = '0.95'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
 DOC_ADMIN = CURDIR + PS + 'README.txt'
-DOMAIN = pget('domain')
+DOMAIN = ''
 BASEURL_DEFAULT = '/store' 
 HOME_DEFAULT = '/product'
 TEMPLATE_DEFAULT = 'default'
 LANG_DEFAULT = 'en_US'
-MAIL_DEFAULT = '%s <%s>' %(DOMAIN, pget('mail_default'))
+MAIL_DEFAULT = ''
 FORCE_SINGLE_CURRENCY = True
 CWIDTH = {'product': 42, 'qty': 8, 'price': 17, 'vat': 16, 'subtotal': 18}
 CSPACE = '  '
@@ -1327,6 +1327,8 @@ def nrfloat(snumber, precision=PRECISION, round=decimal.ROUND_UP):
         
 
 def rt(precision=4, show_second=True):
+    if not pget('expose_time') == '1': return ''
+    #
     x = rendertime[1] - rendertime[0]
     if x <= 0:
         x = 0
@@ -2199,7 +2201,7 @@ def proc_set_res(handle):
     #
     FORCE_PROMOTE = res['promote']
     PAYMENT_TYPE = res['payments']
-    DOMAIN = pget('domain')
+    DOMAIN = web.ctx.env.get('HTTP_HOST', '')
     MAIL_DEFAULT = '%s <%s>' %(DOMAIN, pget('mail_default'))
     #
     return handle()
@@ -2956,7 +2958,7 @@ class admin_system:
         data['keywords'] = pget('site_keywords', default='')
         data['news_max'] = pget('news_max')
         data['message'] = smget() 
-        data['domain'] = pget('domain')
+        data['expose_time'] = pget('expose_time')
         data['promote'] = pget('promote')
         data['max_product_category'] = pget('max_product_category')
         data['max_product'] = pget('max_product')
@@ -2987,7 +2989,7 @@ class admin_system:
                 logo_file='',
                 keywords='',
                 news_max='',
-                domain='',
+                expose_time='',
                 promote='',
                 payments='',
                 max_product_category='',
@@ -3013,7 +3015,7 @@ class admin_system:
         logo_file = i.logo_file
         keywords = i.keywords
         news_max = i.news_max
-        domain= i.domain
+        expose_time= i.expose_time
         promote= i.promote
         payments= i.payments
         max_product_category= i.max_product_category
@@ -3050,7 +3052,7 @@ class admin_system:
             'logo_file'         : logo_file,
             'site_keywords'     : keywords,
             'news_max'          : news_max,
-            'domain'  : domain,
+            'expose_time'  : expose_time,
             'promote'  : promote,
             'payments'  : payments,
             'max_product_category'  : max_product_category,
