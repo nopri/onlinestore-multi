@@ -78,5 +78,11 @@ INSTALLATION:
    - Download http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
    - Extract and put GeoIP.dat into root directory of source code
 
+9) Please login as admin, go to System Configuration, and set (at least):
+   - Enable shopping cart
+   - Used currency
+   - Site offline for maintenance
+   - Default email 
+   
 
 THANK YOU :)
