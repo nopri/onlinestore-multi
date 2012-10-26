@@ -232,7 +232,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.96'
+VERSION = '0.97'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -2968,7 +2968,7 @@ class admin_system:
         data['mail_user'] = pget('mail_user')
         data['mail_pass'] = pget('mail_pass')
         data['mail_default'] = pget('mail_default')
-        data['url_base'] = pget('url_base')
+        data['homepage'] = pget('homepage')
         data['font_dir'] = pget('font_dir')
         data['payments'] = pget('payments')
         #
@@ -3000,7 +3000,7 @@ class admin_system:
                 mail_user='',
                 mail_pass='',
                 mail_default='',
-                url_base='',
+                homepage='',
                 font_dir='',
             )
         #
@@ -3026,7 +3026,7 @@ class admin_system:
         mail_user= i.mail_user
         mail_pass= i.mail_pass
         mail_default= i.mail_default
-        url_base= i.url_base
+        homepage= i.homepage
         font_dir= i.font_dir
         #
         tpinfo = tinfo(template)
@@ -3063,7 +3063,7 @@ class admin_system:
             'mail_user'  : mail_user,
             'mail_pass'  : mail_pass,
             'mail_default'  : mail_default,
-            'url_base'  : url_base,
+            'homepage'  : homepage,
             'font_dir'  : font_dir,
         }
         for i in config.keys():

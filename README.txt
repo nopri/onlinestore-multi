@@ -25,6 +25,7 @@ FEATURES:
 - Captcha (Random Font)
 - Custom Logo 
 - Custom URL Redirect
+- Custom Homepage URL
 - Flash Animation as Product Picture
 - Payment: Cash, Cash On Delivery, Bank/Wire Transfer
 - More
