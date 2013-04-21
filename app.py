@@ -248,6 +248,7 @@ CWIDTH = {'product': 42, 'qty': 8, 'price': 17, 'vat': 16, 'subtotal': 18}
 CSPACE = '  '
 CART_ADD_MAX = 10
 ADMIN_URL_GROUP = ('/profile', '/passwd', '/promote')
+REGEX_EMAIL = r'^[\w\.\+-]+@[\w\.-]+\.[a-zA-Z]+$'
 
 
 ################################ GLOBAL ################################
@@ -307,65 +308,14 @@ rendertime = [0, 0]
 ############################### FUNCTION ###############################
 
 def is_valid_email(email):
-    tld = [
-    'biz', 
-    'com',
-    'info',
-    'name',
-    'net',
-    'org',
-    'pro',
-    'aero',
-    'asia',
-    'cat',
-    'coop',
-    'edu',
-    'gov',
-    'int',
-    'jobs',
-    'mil',
-    'mobi',
-    'museum',
-    'tel',
-    'travel',
-    ]
-
-    user_allowed = '-_.%+'
-    host_allowed = '-_.'
-
-    #too short
-    if len(email) < 6:
-        return False
-    #
-    
-    #split by @
-    try:
-        user, domain = email.rsplit('@', 1)
-        host, tl = domain.rsplit('.', 1)
-    except:
-        return False
-    #
-    
-    #check for country code and toplevel
-    if len(tl) != 2 and tl not in tld:
-        return False
-    #
-
-    #remove char in user allowed
-    for i in user_allowed:
-        user = user.replace(i, '')
-    #
-    #remove char in host allowed
-    for i in host_allowed:
-        host = host.replace(i, '')
-    #
-
-    #should contain only alpha numeric
-    if user.isalnum() and host.isalnum():
+    #previous implementation was based on codes from internet
+    #(around 2010, thank you very much, however, i forgot the site :( )
+    #as of 21-April-2013, regex is used
+    if re.match(REGEX_EMAIL, email):
         return True
-    else:
-        return False
-
+    #
+    return False
+    
 
 def detect_ua(ua):
     ret = {}

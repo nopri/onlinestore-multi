@@ -7,6 +7,12 @@ GPL
 SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
 
 
+NOTE (As of 21-April-2013 UTC+7):
+- update some code (untested, sorry)
+- v0.97 is possibly the latest version with MySQL support
+- future version is planned to support only SQLite (it will need some time)
+
+
 FEATURES:
 - Run as WSGI Application
 - Multi Language (currently English and Bahasa Indonesia)
