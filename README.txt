@@ -9,7 +9,7 @@ SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
 
 NOTE (As of 21-April-2013 UTC+7):
 - update some code (untested, sorry)
-- v0.97 is possibly the latest version with MySQL support
+- v0.97 is probably the last version with MySQL support
 - future version is planned to support only SQLite (it will need some time)
 
 
@@ -42,7 +42,6 @@ REQUIREMENTS:
 - web.py
 - jQuery/jQueryUI (bundled, old version)
 - PyYAML
-- BeautifulSoup
 - GeoIP or pygeoip (auto detect)
 - Python Imaging Library
 - MySQL (and MySQLdb) 

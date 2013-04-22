@@ -51,9 +51,17 @@ except ImportError:
 #
 import web
 import yaml
-from BeautifulSoup import BeautifulSoup
+from HTMLParser import HTMLParser
 import messages as m
 reload(m)
+
+class StripHTMLParser(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.text = []
+    
+    def handle_data(self, data):
+        self.text.append(data)
 
 
 ############################# MODULE PARAM #############################
@@ -354,8 +362,9 @@ def nf(number, decimal=PRECISION):
 
 
 def striphtml(text):
-    data = BeautifulSoup(text).findAll(text=True)
-    ret = ''.join(data)
+    data = StripHTMLParser()
+    data.feed(text)
+    ret = ''.join(data.text)
     return ret
 
 
