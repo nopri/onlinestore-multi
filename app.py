@@ -1,18 +1,21 @@
-# -*- coding: utf-8 -*-
-
 #
-#(c) Noprianto <nop@tedut.com>, 2010, GPL
-#
+# onlinestore-multi
+# simple online store application
+# (c) Noprianto <nop@tedut.com> 
+# 2010
+# GPL
+# v0.98
+# 
+# migrated from MySQL to SQLite on 2013-12-17 
 
 
 ################################ IMPORT ################################
 
 
 import os
-CURDIR = os.path.dirname(__file__)
-PS = os.path.sep 
-CONFIG_FILE_DEFAULT = 'config.ini'
-
+CURDIR = os.path.abspath(os.path.dirname(__file__))
+PS = os.path.sep
+ 
 import sys
 sys.path.append(CURDIR)
 
@@ -52,6 +55,7 @@ except ImportError:
 import web
 import yaml
 from HTMLParser import HTMLParser
+import sqlite3
 import messages as m
 reload(m)
 
@@ -73,7 +77,7 @@ web.config.session_parameters['ignore_expiry'] = True
 web.config.session_parameters['timeout'] = 1800 #30 minute
 
 
-############################## URLS / WEB APP ############################
+############################ URLS / WEB APP ############################
 
 
 URLS = (
@@ -155,27 +159,25 @@ URLS = (
 wapp = web.application(URLS, globals())
 
 
-############################## DATABASE ############################
+############################## DATABASE ################################
 
 
-def cget(section, option, default='', strip=True):
-    c = ConfigParser.ConfigParser()
-    c.read(CURDIR + PS + CONFIG_FILE_DEFAULT)
+DATA_SQL_DEFAULT = 'data.sql'
+DATA_FILE_DEFAULT = 'onlinestore-multi.db'
+DATA_SQL = os.path.join(CURDIR, DATA_SQL_DEFAULT) 
+DATA_FILE = os.path.join(CURDIR, DATA_FILE_DEFAULT)
+
+db_error = False
+if not os.path.exists(DATA_FILE) or not os.path.getsize(DATA_FILE):
     try:
-        ret = c.get(section, option)
+        test_db = sqlite3.connect(DATA_FILE)
+        test_db.executescript(open(DATA_SQL).read())
+        test_db.close()
     except:
-        ret = default
-    del c
-    #
-    if strip and hasattr(ret, 'strip'):
-        ret = ret.strip()
-    #
-    return ret
-
+        db_error = True
 
 try:
-    conn = web.database(dbn = cget('db', 'type'), db = cget('db', 'name'),
-        user = cget('db', 'user'), pw = cget('db', 'pass'))
+    conn = web.database(dbn = 'sqlite', db = DATA_FILE)
 except:
     conn = None
 if conn and hasattr(conn, 'query'):
@@ -240,7 +242,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.97'
+VERSION = '0.98'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -294,16 +296,16 @@ mobile = ''
 #as of 22-October-2012
 res_fix = ['cart', 'user_content', 'blog']
 res = {
-        'cart'                              : True,
+        'cart'                        : True,
         'user_content'                : True,
-        'blog'                              : True,        
-        'promote'                         : True,
-        'payments'                       : [1,2,3],
-        'value'                            : 200,
-        'max_product_category'  : 100,
-        'max_product'                  : 500,
-        'max_file_size'              : 600 * 1024,
-        'max_files'                     : 600,
+        'blog'                        : True,        
+        'promote'                     : True,
+        'payments'                    : [1,2,3],
+        'value'                       : 200,
+        'max_product_category'        : 100,
+        'max_product'                 : 500,
+        'max_file_size'               : 600 * 1024,
+        'max_files'                   : 600,
 }
 
 #quick hack as of 18-October-2012
@@ -314,6 +316,7 @@ rendertime = [0, 0]
 
 
 ############################### FUNCTION ###############################
+
 
 def is_valid_email(email):
     #previous implementation was based on codes from internet
@@ -354,7 +357,8 @@ def now(format='%Y-%m-%d %H:%M:%S'):
 
 
 def dtf(t):
-    return t.strftime(m.t(m.DATETIME_FORMAT, sess.lang)['datetime'])
+    t0 = time.strptime(t, m.t(m.DATETIME_FORMAT, 'default')['datetime'])
+    return time.strftime(m.t(m.DATETIME_FORMAT, sess.lang)['datetime'], t0)
 
 
 def nf(number, decimal=PRECISION):
@@ -493,11 +497,11 @@ def tget(page, globals={}):
 
 def cidget():
     q = '''
-    select auto_increment from information_schema.tables where 
-    table_name='tr_invoice_header' and table_schema=database();
+    select seq from sqlite_sequence where 
+    name='tr_invoice_header';
     '''
     r = query(q)
-    p1 = rget(r, 'auto_increment', default=0)
+    p1 = rget(r, 'seq', default=0)
     p2 = str(time.time())[-5:].replace('.','')
     #
     ret = '%d-%s' %(p1, p2)
@@ -1703,7 +1707,7 @@ def dinvoice(id=0, field='*', date_from='', date_to='', closed=False, all_confir
         q = 'select $field from tr_invoice_header where id=$id'
         a = {'id': id, 'field': web.SQLLiteral(field)}
     else:
-        q = 'select $field from tr_invoice_header where date_purchase >= $df and date_purchase <= DATE_ADD($dt, INTERVAL 1 DAY) and done=$closed order by date_purchase desc'
+        q = 'select $field from tr_invoice_header where date_purchase >= $df and date_purchase <= date($dt, "+1 days") and done=$closed order by date_purchase desc'
         a = {'field': web.SQLLiteral(field), 'df': date_from, 'dt': date_to, 'closed': closed}
     r = query(q, a)
     #
@@ -1736,14 +1740,14 @@ def dstat(date_from='', date_to=''):
     all = [
             [ 
                 msgs['header_stat_country'], 
-                'select count(*) as count from tr_log where date_log>=$df and date_log<= DATE_ADD($dt, INTERVAL 1 DAY)',
-                'select distinct country as var,count(country) as val from tr_log where date_log>=$df and date_log <=DATE_ADD($dt, INTERVAL 1 DAY) group by var order by val desc',
+                'select count(*) as count from tr_log where date_log>=$df and date_log<= date($dt, "+1 days")',
+                'select distinct country as var,count(country) as val from tr_log where date_log>=$df and date_log <= date($dt, "+1 days") group by var order by val desc',
                 None,
             ],
             [ 
                 msgs['header_stat_top_products'], 
-                'select count(*) as count from tr_invoice_detail where header_id in (select id from tr_invoice_header where date_purchase>=$df and date_purchase<= DATE_ADD($dt, INTERVAL 1 DAY))',
-                'select distinct product_variant as var,count(product_variant) as val from tr_invoice_detail where header_id in (select id from tr_invoice_header where date_purchase>=$df and date_purchase<= DATE_ADD($dt, INTERVAL 1 DAY)) group by var order by val desc',
+                'select count(*) as count from tr_invoice_detail where header_id in (select id from tr_invoice_header where date_purchase>=$df and date_purchase<= date($dt, "+1 days"))',
+                'select distinct product_variant as var,count(product_variant) as val from tr_invoice_detail where header_id in (select id from tr_invoice_header where date_purchase>=$df and date_purchase<= date($dt, "+1 days")) group by var order by val desc',
                 (dpro_item, 'name', True, 2),
             ],            
         ]   
@@ -2548,7 +2552,7 @@ class payment_confirm:
             sess.msg = ['error', msgs['msg_payment_confirm_error_invalid_date']]
             raise web.seeother('/payment/confirm')
         #
-        q = 'select cart_id, confirm_info from tr_invoice_header where cart_id=$cart_id and done <> true'
+        q = 'select cart_id, confirm_info from tr_invoice_header where cart_id=$cart_id and done <> 1'
         a = {'cart_id': invoice}
         r = query(q, a)
         cart_id = rget(r, 'cart_id')
@@ -2844,7 +2848,7 @@ class admin_fs_upload:
             raise web.seeother('/admin/fs')
         #
         name_add = ''
-        q = 'select  max(cast(name_add as signed))+1 as max from ms_file where name=$name'
+        q = 'select  max(abs(cast(name_add as integer)))+1 as max from ms_file where name=$name'
         a = {'name':iname}
         r_check = query(q, a)
         if r_check and r_check[0].max > 0:
@@ -2870,7 +2874,7 @@ class admin_fs_upload:
         #
         r = db.insert('ms_file', log_id=sess.log, name=iname, name_add=name_add, size=size, type=itype, 
             type_options=itype_opt, disposition=idisposition, 
-            disposition_options=idisposition_opt, content=icontent, date_file=date_file,
+            disposition_options=idisposition_opt, content=sqlite3.Binary(icontent), date_file=date_file,
             headers=iheaders)
         if r:
             raise web.seeother('/admin/fs')
@@ -3337,8 +3341,8 @@ class admin_product_item_save:
                     r = query(q, a)
                     sess.msg = ['ok', msgs['msg_product_item_saved']]
                 elif i.type == 'add':
-                    r = db.insert('ms_product_variant', active=1, product_id=ipid, stock=istock, price=iprice, 
-                    taxratio=itaxratio, name=m, variant_file_id=ivfid, log_id=sess.log)
+                    r = db.insert('ms_product_variant', active=1, product_id=ipid, stock=istock, price=float(iprice), 
+                    taxratio=float(itaxratio), name=m, variant_file_id=ivfid, log_id=sess.log)
                     if r:
                         sess.msg = ['ok', msgs['msg_product_item_added']]
         #

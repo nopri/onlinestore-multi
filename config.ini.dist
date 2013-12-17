@@ -1,7 +1,0 @@
-#Database connection
-[db]
-type = mysql
-host = localhost
-user = onlinestore
-pass = 
-name = onlinestore 

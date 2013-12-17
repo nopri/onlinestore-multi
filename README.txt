@@ -1,16 +1,17 @@
-onlinestore-multi, Simple Online Store application 
+onlinestore-multi
+Simple Online Store application 
 (c) Noprianto <nop@tedut.com>
 2010
 GPL 
+v0.98
 
 
 SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
 
 
-NOTE (As of 21-April-2013 UTC+7):
-- update some code (untested, sorry)
-- v0.97 is probably the last version with MySQL support
-- future version is planned to support only SQLite (it will need some time)
+NOTE (As of 18-December-2013 UTC+7):
+- This is first version (v0.98) with SQLite database, need more testing
+- v0.97 is the last version with MySQL database
 
 
 FEATURES:
@@ -44,8 +45,11 @@ REQUIREMENTS:
 - PyYAML
 - GeoIP or pygeoip (auto detect)
 - Python Imaging Library
-- MySQL (and MySQLdb) 
 - Apache HTTP Server (and mod_wsgi)
+  (or alternative web server/wsgi)
+
+(If you need simple web-based SQLite management tool, please consider
+sqliteboy, https://github.com/nopri/sqliteboy :) ) 
 
 
 DEFAULT USER/PASSWORD: admin
@@ -56,35 +60,35 @@ INSTALLATION:
 
 2) Download / clone onlinestore-multi: https://github.com/nopri/onlinestore-multi.git
 
-3) Change into application directory:  
-   $ cd onlinestore-multi
+   For example, we put it in /tmp/onlinestore-multi
 
-4) Create new MySQL database and restore from dump file:
-   $ mysql -u root -p
-   mysql> create database onlinestore;
-   mysql> grant all privileges on onlinestore.* to onlinestore@localhost identified by 'onlinestore_password';
-   mysql> flush privileges;
-   mysql> quit;
+3) Make sure that application directory is writeable by user who is running web server.
 
-   $ mysql -D onlinestore -u onlinestore -p < ./db.sql 
+   Please note that onlinestore-multi.db will be automatically created (and populated)
+   in application directory, on first visit, if there is write access on that directory.  
+   
+   Debian-based distribution:
+   (run these commands as root, adjust accordingly)
+   
+   # chgrp www-data /tmp/onlinestore-multi
+   # chmod g+w /tmp/onlinestore-multi
 
-5) Copy config.ini.dist to config.ini, edit accordingly
 
-6) Configure WSGI:
-   Ubuntu-based distribution: edit /etc/apache2/sites-available/default
+4) Configure WSGI:
+   Debian-based distribution: edit /etc/apache2/sites-available/default
    (put these lines below DocumentRoot, adjust accordingly)
 
         WSGIScriptAlias / /tmp/onlinestore-multi/app.py/
         AddType text/html .py
         Alias /static /tmp/onlinestore-multi/static/
   
-7) Restart Apache HTTP Server
+5) Restart Apache HTTP Server
   
-8) If you are using pygeoip:
+6) If you are using pygeoip:
    - Download http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
-   - Extract and put GeoIP.dat into root directory of source code
+   - Extract and put GeoIP.dat into application directory
 
-9) Please login as admin, go to System Configuration, and set (at least):
+7) Please login as admin, go to System Configuration, and set (at least):
    - Enable shopping cart
    - Used currency
    - Site offline for maintenance
