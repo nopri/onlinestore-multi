@@ -174,16 +174,21 @@ if not os.path.exists(DATA_FILE) or not os.path.getsize(DATA_FILE):
         test_db.close()
     except:
         db_error = True
-
-try:
-    conn = web.database(dbn = 'sqlite', db = DATA_FILE)
-except:
-    conn = None
-if conn and hasattr(conn, 'query'):
-    db = conn
 else:
-    db = None
-del conn
+    if not os.access(DATA_FILE, os.W_OK):
+        db_error = True
+
+db = None
+if not db_error:
+    try:
+        conn = web.database(dbn = 'sqlite', db = DATA_FILE)
+    except:
+        conn = None
+    if conn and hasattr(conn, 'query'):
+        db = conn
+    else:
+        db = None
+    del conn
 
 
 ##################### FROM SQLITEBOY (UNMODIFIED) ######################
@@ -274,7 +279,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.99'
+VERSION = '1.00'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -296,22 +301,24 @@ REGEX_EMAIL = r'^[\w\.\+-]+@[\w\.-]+\.[a-zA-Z]+$'
 ################################ GLOBAL ################################
 
 
-sess = web.session.Session(wapp, web.session.DBStore(
-    db, 'sessions'), 
-    initializer={
-        'captcha': '',
-        'p' : {},
-        'lang' : '',
-        'c': {}, 
-        'u': None,
-        'log': None,
-        'co': {},
-        'newsread': False,
-        'msg': [],
-        'browserclass': '',
-        'fullpath': None,
-    }
-)
+sess = None
+if not db_error:
+    sess = web.session.Session(wapp, web.session.DBStore(
+        db, 'sessions'), 
+        initializer={
+            'captcha': '',
+            'p' : {},
+            'lang' : '',
+            'c': {}, 
+            'u': None,
+            'log': None,
+            'co': {},
+            'newsread': False,
+            'msg': [],
+            'browserclass': '',
+            'fullpath': None,
+        }
+    )
 
 
 msgs = ''
@@ -1976,6 +1983,13 @@ web.webapi.nomethod = nomethod
 ########################### WSGI + PROCESSOR ###########################
 
 
+def proc_db_check(handle):
+    if db_error or not os.path.exists(DATA_FILE) or not os.access(DATA_FILE, os.W_OK):
+        msgs = m.t(m.MSG, LANG_DEFAULT)
+        return msgs['msg_error_db_connect']
+    return handle()
+    
+
 def proc_set_log(handle):
     if sess.log: 
         q = 'update tr_log set date_log_last=$log_last,activity=activity+1,user_id_last=$user_id_last where id=$log_id'
@@ -2239,6 +2253,7 @@ def proc_set_res(handle):
     return handle()
 
 
+wapp.add_processor(proc_db_check)
 wapp.add_processor(proc_calc_render_start)
 wapp.add_processor(proc_set_res)
 wapp.add_processor(proc_detect_ua)

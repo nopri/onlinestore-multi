@@ -3,7 +3,7 @@ Simple Online Store application
 (c) Noprianto <nop@tedut.com>
 2010
 GPL 
-v0.99
+v1.00
 
 
 SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
@@ -59,12 +59,11 @@ INSTALLATION:
 
    For example, we put it in /tmp/onlinestore-multi
 
-3) Make sure that application directory is writeable by user 
+3) Make sure that installation directory is writable by the user 
    who is running web server.
 
    Please note that onlinestore-multi.db will be automatically 
-   created (and populated) in application directory, 
-   on first visit, if there is write access on that directory.  
+   created (and populated) in installation directory.  
    
    Debian/Debian-based distribution:
    (run these commands as root, adjust accordingly)
@@ -85,7 +84,7 @@ INSTALLATION:
   
 6) If you are using pygeoip:
    - Download http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
-   - Extract and put GeoIP.dat into application directory
+   - Extract and put GeoIP.dat in installation directory
 
 7) Please login as admin, go to System Configuration, and set (at least):
    - Enable shopping cart
