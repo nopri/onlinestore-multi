@@ -1,4 +1,8 @@
-# -*- coding: utf-8 -*-
+NUMBER_FORMAT = {
+    'default': {'decimal_point': '.', 'thousands_separator': ','},
+    'en_US'  : {'decimal_point': '.', 'thousands_separator': ','},
+    'id_ID'  : {'decimal_point': ',', 'thousands_separator': '.'},
+}
 
 COUNTRY = {
     'default'   : ('_', '', ''),

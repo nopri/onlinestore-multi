@@ -4,7 +4,6 @@
 # (c) Noprianto <nop@tedut.com> 
 # 2010
 # GPL
-# v0.98
 # 
 # migrated from MySQL to SQLite on 2013-12-17 
 
@@ -27,7 +26,7 @@ import decimal
 import urlparse
 import random
 import cStringIO
-import locale
+
 #
 try: 
    from hashlib import md5
@@ -187,6 +186,39 @@ else:
 del conn
 
 
+##################### FROM SQLITEBOY (UNMODIFIED) ######################
+
+
+def sqliteboy_chunk(s, n, separator, justify, padding):
+    s = str(s)
+    separator = str(separator)
+    padding = str(padding)
+    #
+    if (not n) or (not s) or (n < 1):
+        return s
+    #
+    if padding: 
+        pad = padding[0]
+    else:
+        pad = ' '
+    #
+    if not justify:
+        justify = 0
+    #
+    mod = len(s) % n
+    if mod:
+        ln = len(s) + (n - mod)
+        if justify == 0: #left
+            s = s.ljust(ln, pad)
+        else: #right
+            s = s.rjust(ln, pad)
+    #
+    res = [s[i:i+n] for i in range(0, len(s), n)]
+    ret = separator.join(res)
+    #
+    return ret
+
+
 ########################### IMPORTANT FUNCTION #########################
 
 
@@ -242,7 +274,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '0.98'
+VERSION = '0.99'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -335,21 +367,58 @@ def detect_ua(ua):
 
 
 def number_format(number, localeset='', places=0):
-    localeset = str(localeset)
-    saved = locale.getlocale(locale.LC_NUMERIC)
+    '''from sqliteboy, modified'''
+    
+    n = str(number)
+    decimals = places
+    decimal_point = m.t(m.NUMBER_FORMAT, localeset)['decimal_point']
+    thousands_sep = m.t(m.NUMBER_FORMAT, localeset)['thousands_separator']
+    #
+    neg = False
     try:
-        locale.setlocale(locale.LC_NUMERIC, localeset)
+        f = float(n)
+        if f < 0:
+            neg = True
     except:
-        try:
-            localeset = localeset + '.utf8' #quick+dirty, will be fixed later
-            locale.setlocale(locale.LC_NUMBERIC, localeset)
-        except:
-            pass
-    if locale:
-        ret = locale.format('%.*f', (places, number), True)
-        locale.setlocale(locale.LC_NUMERIC, saved)
-        return ret
-    return number
+        return n
+    #
+    if 'e' in n.lower():
+        efmt = '%%.%sf' %len(n)
+        n = efmt %float(n)
+    #
+    dec = decimals
+    if not isinstance(dec, int) or dec < 0:
+        dec = 0
+    #
+    nn = ''
+    dd = ''
+    if '.' in n: #float
+        nn, dd = n.split('.')
+    else:
+        nn = n
+    nn = nn.replace('-', '')
+    nn = nn.replace('+', '')
+    nn = nn.strip()
+    dd = dd.strip()
+    #
+    if dd:
+        if dec <= len(dd):
+            dd = dd[:dec]
+        else:
+            dd = dd.ljust(dec, '0')
+    #
+    nn = sqliteboy_chunk(nn, 3, thousands_sep, 1, '').strip()
+    dd = dd.strip()
+    #
+    if neg:
+        nn = '-' + nn
+    #
+    if dd:
+        ret = nn + decimal_point + dd
+    else:
+        ret = nn
+    #
+    return ret
     
 
 def now(format='%Y-%m-%d %H:%M:%S'):

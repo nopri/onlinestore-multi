@@ -3,15 +3,10 @@ Simple Online Store application
 (c) Noprianto <nop@tedut.com>
 2010
 GPL 
-v0.98
+v0.99
 
 
 SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
-
-
-NOTE (As of 18-December-2013 UTC+7):
-- This is first version (v0.98) with SQLite database, need more testing
-- v0.97 is the last version with MySQL database
 
 
 FEATURES:
@@ -48,8 +43,9 @@ REQUIREMENTS:
 - Apache HTTP Server (and mod_wsgi)
   (or alternative web server/wsgi)
 
-(If you need simple web-based SQLite management tool, please consider
-sqliteboy, https://github.com/nopri/sqliteboy :) ) 
+If you need simple web-based SQLite management tool, 
+please consider sqliteboy, 
+https://github.com/nopri/sqliteboy :) 
 
 
 DEFAULT USER/PASSWORD: admin
@@ -58,24 +54,27 @@ DEFAULT USER/PASSWORD: admin
 INSTALLATION:
 1) Install all the requirements above (except for bundled)
 
-2) Download / clone onlinestore-multi: https://github.com/nopri/onlinestore-multi.git
+2) Download / clone onlinestore-multi: 
+   https://github.com/nopri/onlinestore-multi.git
 
    For example, we put it in /tmp/onlinestore-multi
 
-3) Make sure that application directory is writeable by user who is running web server.
+3) Make sure that application directory is writeable by user 
+   who is running web server.
 
-   Please note that onlinestore-multi.db will be automatically created (and populated)
-   in application directory, on first visit, if there is write access on that directory.  
+   Please note that onlinestore-multi.db will be automatically 
+   created (and populated) in application directory, 
+   on first visit, if there is write access on that directory.  
    
-   Debian-based distribution:
+   Debian/Debian-based distribution:
    (run these commands as root, adjust accordingly)
    
    # chgrp www-data /tmp/onlinestore-multi
    # chmod g+w /tmp/onlinestore-multi
 
-
 4) Configure WSGI:
-   Debian-based distribution: edit /etc/apache2/sites-available/default
+   Debian/Debian-based distribution: 
+   edit /etc/apache2/sites-available/default
    (put these lines below DocumentRoot, adjust accordingly)
 
         WSGIScriptAlias / /tmp/onlinestore-multi/app.py/
