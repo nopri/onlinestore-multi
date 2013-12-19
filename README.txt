@@ -3,7 +3,7 @@ Simple Online Store application
 (c) Noprianto <nop@tedut.com>
 2010
 GPL 
-v1.00
+v1.01
 
 
 SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
@@ -87,7 +87,6 @@ INSTALLATION:
    - Extract and put GeoIP.dat in installation directory
 
 7) Please login as admin, go to System Configuration, and set (at least):
-   - Enable shopping cart
    - Used currency
    - Site offline for maintenance
    - Default email 

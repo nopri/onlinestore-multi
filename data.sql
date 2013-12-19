@@ -45,46 +45,44 @@ CREATE TABLE ms_config (
   PRIMARY KEY  (param)
 );
 
-INSERT INTO ms_config VALUES 
-    ('allow_user','',NULL),
-    ('another_email','',NULL),
-    ('blog_show_style','date',NULL),
-    ('cart_check_stock','',NULL),
-    ('currency','',NULL),
-    ('expose_error','1',NULL),
-    ('extra_info','',NULL),
-    ('general_error_message','',NULL),
-    ('homepage','',NULL),
-    ('invoice_extra_info','',NULL),
-    ('invoice_show_bank','',NULL),
-    ('invoice_show_paypal','',NULL),
-    ('lang','',NULL),
-    ('logo_file','',NULL),
-    ('news_max','5',NULL),
-    ('offline','1',NULL),
-    ('payment_month','12',NULL),
-    ('promo_host','',NULL),
-    ('secure','',NULL),
-    ('site_description','',NULL),
-    ('site_keywords','',NULL),
-    ('sticky_info','',NULL),
-    ('template','default',NULL),
-    ('template_param','',NULL),
-    ('use_cart','',NULL),
-    ('expose_time','1',NULL),
-    ('promote','1',NULL),
-    ('payments','1,2,3,',NULL),
-    ('max_product_category','100',NULL),
-    ('max_product','500',NULL),
-    ('max_file_size','512000',NULL),
-    ('max_files','500',NULL),
-    ('mail_smtp','',NULL),
-    ('mail_user','',NULL),
-    ('mail_pass','',NULL),
-    ('mail_default','',NULL),
-    ('url_base','/',NULL),
-    ('font_dir','/usr/share/fonts/truetype/freefont/',NULL)
-;
+INSERT INTO ms_config (param, value, log_id) VALUES ('allow_user','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('another_email','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('blog_show_style','date',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('cart_check_stock','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('currency','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('expose_error','1',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('extra_info','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('general_error_message','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('homepage','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('invoice_extra_info','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('invoice_show_bank','1',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('invoice_show_paypal','1',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('lang','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('logo_file','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('news_max','5',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('offline','1',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('payment_month','12',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('promo_host','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('secure','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('site_description','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('site_keywords','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('sticky_info','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('template','default',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('template_param','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('use_cart','1',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('expose_time','1',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('promote','1',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('payments','1,2,3,',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('max_product_category','100',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('max_product','500',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('max_file_size','512000',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('max_files','500',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('mail_smtp','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('mail_user','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('mail_pass','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('mail_default','',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('url_base','/',NULL);
+INSERT INTO ms_config (param, value, log_id) VALUES ('font_dir','/usr/share/fonts/truetype/freefont/',NULL);
 
 CREATE TABLE ms_currency (
   id integer primary key autoincrement,
@@ -94,18 +92,16 @@ CREATE TABLE ms_currency (
   extra text
 );
 
-INSERT INTO ms_currency VALUES 
-    (1,'IDR','Rp',NULL,NULL),
-    (2,'USD','$',NULL,NULL),
-    (3,'SGD','$',NULL,NULL),
-    (4,'MYR','RM',NULL,NULL),
-    (5,'HKD','$',NULL,NULL),
-    (6,'JPY','¥',NULL,NULL),
-    (7,'CNY','¥',NULL,NULL),
-    (8,'GBP','£',NULL,NULL),
-    (9,'AUD','$',NULL,NULL),
-    (10,'NZD','$',NULL,NULL)
-;
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (1,'IDR','Rp',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (2,'USD','$',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (3,'SGD','$',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (4,'MYR','RM',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (5,'HKD','$',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (6,'JPY','¥',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (7,'CNY','¥',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (8,'GBP','£',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (9,'AUD','$',NULL,NULL);
+INSERT INTO ms_currency (id, name, csymbol, log_id, extra) VALUES (10,'NZD','$',NULL,NULL);
 
 CREATE TABLE ms_file (
   id integer primary key autoincrement,
@@ -132,10 +128,8 @@ CREATE TABLE ms_group (
   log_id integer default NULL
 );
 
-INSERT INTO ms_group VALUES 
-    (1,'ADMIN',NULL,NULL),
-    (2,'USER',NULL,NULL)
-;
+INSERT INTO ms_group (id, name, extra, log_id) VALUES (1,'ADMIN',NULL,NULL);
+INSERT INTO ms_group (id, name, extra, log_id) VALUES (2,'USER',NULL,NULL);
 
 CREATE TABLE ms_link (
   id integer primary key autoincrement,
@@ -152,18 +146,16 @@ CREATE TABLE ms_payment_type (
   extra text
 );
 
-INSERT INTO ms_payment_type VALUES 
-    (1,'Cash',NULL,NULL),
-    (2,'Cash On Delivery',NULL,NULL),
-    (3,'Bank/Wire Transfer',NULL,NULL),
-    (4,'Credit',NULL,NULL),
-    (5,'Debit Card',NULL,NULL),
-    (6,'Credit Card',NULL,NULL),
-    (7,'Voucher',NULL,NULL),
-    (8,'Gift Card',NULL,NULL),
-    (9,'PayPal',NULL,NULL),
-    (10,'Other',NULL,NULL)
-;
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (1,'Cash',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (2,'Cash On Delivery',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (3,'Bank/Wire Transfer',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (4,'Credit',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (5,'Debit Card',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (6,'Credit Card',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (7,'Voucher',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (8,'Gift Card',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (9,'PayPal',NULL,NULL);
+INSERT INTO ms_payment_type (id, name, log_id, extra) VALUES (10,'Other',NULL,NULL);
 
 CREATE TABLE ms_paypal (
   id integer primary key autoincrement,
@@ -233,9 +225,12 @@ CREATE TABLE ms_user (
   extra text
 );
 
-INSERT INTO ms_user VALUES 
-    (1,'admin',1,'21232f297a57a5a743894a0e4a801fc3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL)
-;
+INSERT INTO ms_user
+    (id, name, group_id, password, first_name, last_name, 
+    email, phone, fax, web, icontact, acontact, govid, 
+    address, active, payment, photo, log_id, extra) 
+    VALUES (1,'admin',1,'21232f297a57a5a743894a0e4a801fc3',
+    NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL);
 
 CREATE TABLE ms_user_content (
   id integer primary key autoincrement,
