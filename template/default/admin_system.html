@@ -100,6 +100,26 @@ $else:
     </tr>
 
 
+    <tr>
+    <td width='20%' valign='top'>
+    $msg['header_sys_default_language'].capitalize()
+    $:dkget(msg, 'desc_sys_default_language', "&nbsp;<span class='systeminfo'>(", ')</span>&nbsp;')
+    </td>
+    <td>
+    <select name='lang'>
+    <option value=''></option>
+    $for country in ulang.values():
+        $if country[1]:
+            $ lang_default=''
+            $if data['lang'] == country[0]:
+                $ lang_default=' selected'
+            <option value='$country[0]'$lang_default>$country[1]</option>
+    </select>
+    </td>
+    </tr>
+
+
+
     $if data['cart']:
         <tr>
         <td width='20%' valign='top'>

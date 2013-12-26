@@ -1,3 +1,6 @@
+LANGS = {
+}
+
 NUMBER_FORMAT = {
     'default': {'decimal_point': '.', 'thousands_separator': ','},
     'en_US'  : {'decimal_point': '.', 'thousands_separator': ','},
@@ -317,6 +320,7 @@ MSG = {
         'header_sys_url_base'   : 'URL base',
         'header_sys_homepage'   : 'Homepage URL',
         'header_sys_font_dir'   : 'font directory (server)',
+        'header_sys_default_language'   : 'default language',
         'header_product_category_action': 'action',
         'header_product_category_name': 'category name',
         'header_product_category_new': 'new category',
@@ -765,6 +769,7 @@ MSG = {
         'header_sys_url_base'   : 'basis URL',
         'header_sys_homepage'   : 'URL Homepage',
         'header_sys_font_dir'   : 'direktori font (server)',
+        'header_sys_default_language'   : 'bahasa default',
         'header_product_category_action': 'action',
         'header_product_category_name': 'name kategori',
         'header_product_category_new': 'kategori baru',

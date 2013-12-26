@@ -279,7 +279,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '1.01'
+VERSION = '1.02'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -3018,6 +3018,7 @@ class admin_system:
         data['homepage'] = pget('homepage')
         data['font_dir'] = pget('font_dir')
         data['payments'] = pget('payments')
+        data['lang'] = pget('lang')
         #
         o = t.admin_system(title(ttl), data)
         o = tplb(o)
@@ -3049,6 +3050,7 @@ class admin_system:
                 mail_default='',
                 homepage='',
                 font_dir='',
+                lang='',
             )
         #
         site_desc = mlset(i, 'site_desc')
@@ -3075,6 +3077,7 @@ class admin_system:
         mail_default= i.mail_default
         homepage= i.homepage
         font_dir= i.font_dir
+        lang = i.lang
         #
         tpinfo = tinfo(template)
         if not tpinfo:
@@ -3112,6 +3115,7 @@ class admin_system:
             'mail_default'  : mail_default,
             'homepage'  : homepage,
             'font_dir'  : font_dir,
+            'lang'      : lang,
         }
         for i in config.keys():
             r = db.update('ms_config', value=config[i], where='param=$param', log_id=sess.log, vars={'param': i})
@@ -3421,7 +3425,7 @@ class admin_product_item_save:
             else:
                 if i.type == 'edit':
                     q = 'update ms_product_variant set name=$name, active=1, product_id=$ipid, stock=$istock, price=$iprice, taxratio=$itaxratio, variant_file_id=$variant_file_id, log_id=$logid where id=$id'
-                    a = {'id': a, 'name': m, 'ipid': ipid, 'istock': istock, 'iprice': iprice, 'itaxratio': itaxratio, 'variant_file_id': ivfid, 'logid': sess.log}
+                    a = {'id': a, 'name': m, 'ipid': ipid, 'istock': istock, 'iprice': float(iprice), 'itaxratio': float(itaxratio), 'variant_file_id': ivfid, 'logid': sess.log}
                     r = query(q, a)
                     sess.msg = ['ok', msgs['msg_product_item_saved']]
                 elif i.type == 'add':

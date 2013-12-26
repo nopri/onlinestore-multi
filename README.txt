@@ -3,7 +3,7 @@ Simple Online Store application
 (c) Noprianto <nop@tedut.com>
 2010
 GPL 
-v1.01
+v1.02
 
 
 SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki
@@ -77,7 +77,6 @@ INSTALLATION:
    (put these lines below DocumentRoot, adjust accordingly)
 
         WSGIScriptAlias / /tmp/onlinestore-multi/app.py/
-        AddType text/html .py
         Alias /static /tmp/onlinestore-multi/static/
   
 5) Restart Apache HTTP Server
