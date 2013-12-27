@@ -3,7 +3,7 @@ Simple Online Store application
 (c) Noprianto <nop@tedut.com>
 2010
 GPL 
-v1.02
+v1.03
 
 
 SCREENSHOTS / USERS: https://github.com/nopri/onlinestore-multi/wiki

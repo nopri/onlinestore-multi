@@ -1,6 +1,3 @@
-LANGS = {
-}
-
 NUMBER_FORMAT = {
     'default': {'decimal_point': '.', 'thousands_separator': ','},
     'en_US'  : {'decimal_point': '.', 'thousands_separator': ','},
@@ -295,6 +292,8 @@ MSG = {
         'header_no_translation' : 'no translation',
         'header_member_level'   : 'membership level',
         'header_app_version'    : 'version',
+        'header_database_size'  : 'database size',
+        'header_log_size'       : 'log size',
         'header_sys_site_description': 'store description',
         'header_sys_site_keywords': 'store keywords',
         'header_sys_extra_info' : 'extra information',
@@ -744,6 +743,8 @@ MSG = {
         'header_no_translation' : 'tanpa terjemahan',
         'header_member_level'   : 'level keanggotaan',
         'header_app_version'    : 'versi',
+        'header_database_size'  : 'ukuran database',
+        'header_log_size'       : 'ukuran log',
         'header_sys_site_description': 'deskripsi toko',
         'header_sys_site_keywords': 'keyword toko',
         'header_sys_extra_info' : 'informasi ekstra',

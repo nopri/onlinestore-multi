@@ -279,7 +279,7 @@ def pget(option, default='', strip=True, callback=None):
 ############################### CONSTANT ###############################
 
 
-VERSION = '1.02'
+VERSION = '1.03'
 NAME = 'onlinestore-multi'
 PRECISION = 2
 TEMPLATE_DIR = CURDIR + PS + 'template'
@@ -2807,11 +2807,17 @@ class admin:
         data = {}
         data['menu'] = dadmin()
         #
+        log_size_r = query('select count(id) as count from tr_log')
+        log_size = rget(log_size_r, 'count', default=0)
         #
         if isadmin():
             data['version'] = VERSION
+            data['database_size'] = nf(os.path.getsize(DATA_FILE))
+            data['log_size'] = nf(log_size)
         else:
             data['version'] = ''
+            data['database_size'] = ''
+            data['log_size'] = ''
         #
         o = t.admin(title(ttl), data)
         o = tplb(o)
